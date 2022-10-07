@@ -6,6 +6,7 @@ enum ActionType {
 }
 
 enum Duration {
+  NA,
   THREE_HOURS,
   SIX_HOURS,
   TWELVE_HOURS,

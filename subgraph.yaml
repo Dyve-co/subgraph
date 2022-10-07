@@ -30,4 +30,4 @@ dataSources:
           handler: handleClaim
         - event: List(indexed address,uint256,uint256,address,uint256,uint256,uint256,uint8)
           handler: handleMakerAsk
-      file: ./mappings/dyve.ts
+      file: ./src/dyve.ts

@@ -2,11 +2,10 @@ import { newMockEvent } from "matchstick-as"
 import { ethereum, Address, BigInt } from "@graphprotocol/graph-ts"
 import {
   Borrow,
-  BorrowToShort,
   Cancel,
+  Claim,
   Close,
-  Expired,
-  ListingEvent,
+  List,
   Update
 } from "../generated/Dyve/Dyve"
 
@@ -14,7 +13,13 @@ export function createBorrowEvent(
   borrower: Address,
   lender: Address,
   dyveId: BigInt,
-  tokenId: BigInt
+  tokenId: BigInt,
+  collection: Address,
+  duration: BigInt,
+  collateral: BigInt,
+  fee: BigInt,
+  expiryDateTime: BigInt,
+  status: i32
 ): Borrow {
   let borrowEvent = changetype<Borrow>(newMockEvent())
 
@@ -30,36 +35,46 @@ export function createBorrowEvent(
     new ethereum.EventParam("dyveId", ethereum.Value.fromUnsignedBigInt(dyveId))
   )
   borrowEvent.parameters.push(
-    new ethereum.EventParam("tokenId", ethereum.Value.fromUnsignedBigInt(tokenId))
+    new ethereum.EventParam(
+      "tokenId",
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    )
+  )
+  borrowEvent.parameters.push(
+    new ethereum.EventParam(
+      "collection",
+      ethereum.Value.fromAddress(collection)
+    )
+  )
+  borrowEvent.parameters.push(
+    new ethereum.EventParam(
+      "duration",
+      ethereum.Value.fromUnsignedBigInt(duration)
+    )
+  )
+  borrowEvent.parameters.push(
+    new ethereum.EventParam(
+      "collateral",
+      ethereum.Value.fromUnsignedBigInt(collateral)
+    )
+  )
+  borrowEvent.parameters.push(
+    new ethereum.EventParam("fee", ethereum.Value.fromUnsignedBigInt(fee))
+  )
+  borrowEvent.parameters.push(
+    new ethereum.EventParam(
+      "expiryDateTime",
+      ethereum.Value.fromUnsignedBigInt(expiryDateTime)
+    )
+  )
+  borrowEvent.parameters.push(
+    new ethereum.EventParam(
+      "status",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(status))
+    )
   )
 
   return borrowEvent
-}
-
-export function createBorrowToShortEvent(
-  borrower: Address,
-  lender: Address,
-  dyveId: BigInt,
-  tokenId: BigInt
-): BorrowToShort {
-  let borrowToShortEvent = changetype<BorrowToShort>(newMockEvent())
-
-  borrowToShortEvent.parameters = new Array()
-
-  borrowToShortEvent.parameters.push(
-    new ethereum.EventParam("borrower", ethereum.Value.fromAddress(borrower))
-  )
-  borrowToShortEvent.parameters.push(
-    new ethereum.EventParam("lender", ethereum.Value.fromAddress(lender))
-  )
-  borrowToShortEvent.parameters.push(
-    new ethereum.EventParam("dyveId", ethereum.Value.fromUnsignedBigInt(dyveId))
-  )
-  borrowToShortEvent.parameters.push(
-    new ethereum.EventParam("tokenId", ethereum.Value.fromUnsignedBigInt(tokenId))
-  )
-
-  return borrowToShortEvent
 }
 
 export function createCancelEvent(
@@ -82,18 +97,74 @@ export function createCancelEvent(
     new ethereum.EventParam("dyveId", ethereum.Value.fromUnsignedBigInt(dyveId))
   )
   cancelEvent.parameters.push(
-    new ethereum.EventParam("tokenId", ethereum.Value.fromUnsignedBigInt(tokenId))
+    new ethereum.EventParam(
+      "tokenId",
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    )
   )
 
   return cancelEvent
+}
+
+export function createClaimEvent(
+  borrower: Address,
+  lender: Address,
+  dyveId: BigInt,
+  tokenId: BigInt,
+  collection: Address,
+  collateral: BigInt,
+  status: i32
+): Claim {
+  let claimEvent = changetype<Claim>(newMockEvent())
+
+  claimEvent.parameters = new Array()
+
+  claimEvent.parameters.push(
+    new ethereum.EventParam("borrower", ethereum.Value.fromAddress(borrower))
+  )
+  claimEvent.parameters.push(
+    new ethereum.EventParam("lender", ethereum.Value.fromAddress(lender))
+  )
+  claimEvent.parameters.push(
+    new ethereum.EventParam("dyveId", ethereum.Value.fromUnsignedBigInt(dyveId))
+  )
+  claimEvent.parameters.push(
+    new ethereum.EventParam(
+      "tokenId",
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    )
+  )
+  claimEvent.parameters.push(
+    new ethereum.EventParam(
+      "collection",
+      ethereum.Value.fromAddress(collection)
+    )
+  )
+  claimEvent.parameters.push(
+    new ethereum.EventParam(
+      "collateral",
+      ethereum.Value.fromUnsignedBigInt(collateral)
+    )
+  )
+  claimEvent.parameters.push(
+    new ethereum.EventParam(
+      "status",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(status))
+    )
+  )
+
+  return claimEvent
 }
 
 export function createCloseEvent(
   borrower: Address,
   lender: Address,
   dyveId: BigInt,
-  originalNFTcollectionID: BigInt,
-  returnedNFTCollectionID: BigInt
+  tokenId: BigInt,
+  collection: Address,
+  collateral: BigInt,
+  returnedTokenId: BigInt,
+  status: i32
 ): Close {
   let closeEvent = changetype<Close>(newMockEvent())
 
@@ -110,62 +181,93 @@ export function createCloseEvent(
   )
   closeEvent.parameters.push(
     new ethereum.EventParam(
-      "originalNFTcollectionID",
-      ethereum.Value.fromUnsignedBigInt(originalNFTcollectionID)
+      "tokenId",
+      ethereum.Value.fromUnsignedBigInt(tokenId)
     )
   )
   closeEvent.parameters.push(
     new ethereum.EventParam(
-      "returnedNFTCollectionID",
-      ethereum.Value.fromUnsignedBigInt(returnedNFTCollectionID)
+      "collection",
+      ethereum.Value.fromAddress(collection)
+    )
+  )
+  closeEvent.parameters.push(
+    new ethereum.EventParam(
+      "collateral",
+      ethereum.Value.fromUnsignedBigInt(collateral)
+    )
+  )
+  closeEvent.parameters.push(
+    new ethereum.EventParam(
+      "returnedTokenId",
+      ethereum.Value.fromUnsignedBigInt(returnedTokenId)
+    )
+  )
+  closeEvent.parameters.push(
+    new ethereum.EventParam(
+      "status",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(status))
     )
   )
 
   return closeEvent
 }
 
-export function createExpiredEvent(
-  borrower: Address,
-  lender: Address,
-  dyveId: BigInt
-): Expired {
-  let expiredEvent = changetype<Expired>(newMockEvent())
-
-  expiredEvent.parameters = new Array()
-
-  expiredEvent.parameters.push(
-    new ethereum.EventParam("borrower", ethereum.Value.fromAddress(borrower))
-  )
-  expiredEvent.parameters.push(
-    new ethereum.EventParam("lender", ethereum.Value.fromAddress(lender))
-  )
-  expiredEvent.parameters.push(
-    new ethereum.EventParam("dyveId", ethereum.Value.fromUnsignedBigInt(dyveId))
-  )
-
-  return expiredEvent
-}
-
-export function createListingEventEvent(
+export function createListEvent(
   lender: Address,
   dyveId: BigInt,
-  tokenId: BigInt
-): ListingEvent {
-  let listingEventEvent = changetype<ListingEvent>(newMockEvent())
+  tokenId: BigInt,
+  collection: Address,
+  duration: BigInt,
+  collateral: BigInt,
+  fee: BigInt,
+  status: i32
+): List {
+  let listEvent = changetype<List>(newMockEvent())
 
-  listingEventEvent.parameters = new Array()
+  listEvent.parameters = new Array()
 
-  listingEventEvent.parameters.push(
+  listEvent.parameters.push(
     new ethereum.EventParam("lender", ethereum.Value.fromAddress(lender))
   )
-  listingEventEvent.parameters.push(
+  listEvent.parameters.push(
     new ethereum.EventParam("dyveId", ethereum.Value.fromUnsignedBigInt(dyveId))
   )
-  listingEventEvent.parameters.push(
-    new ethereum.EventParam("tokenId", ethereum.Value.fromUnsignedBigInt(tokenId))
+  listEvent.parameters.push(
+    new ethereum.EventParam(
+      "tokenId",
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    )
+  )
+  listEvent.parameters.push(
+    new ethereum.EventParam(
+      "collection",
+      ethereum.Value.fromAddress(collection)
+    )
+  )
+  listEvent.parameters.push(
+    new ethereum.EventParam(
+      "duration",
+      ethereum.Value.fromUnsignedBigInt(duration)
+    )
+  )
+  listEvent.parameters.push(
+    new ethereum.EventParam(
+      "collateral",
+      ethereum.Value.fromUnsignedBigInt(collateral)
+    )
+  )
+  listEvent.parameters.push(
+    new ethereum.EventParam("fee", ethereum.Value.fromUnsignedBigInt(fee))
+  )
+  listEvent.parameters.push(
+    new ethereum.EventParam(
+      "status",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(status))
+    )
   )
 
-  return listingEventEvent
+  return listEvent
 }
 
 export function createUpdateEvent(

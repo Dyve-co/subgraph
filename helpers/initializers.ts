@@ -70,8 +70,14 @@ export function initializeCollection(collectionID: string): Collection {
 export function initializeUser(userID: string): User {
   const user = new User(userID);
   user.totalTransactions = ZERO_BI;
+  user.totalBorrowTransactions = ZERO_BI;
+  user.totalLendTransactions = ZERO_BI;
+  user.totalClaimTransactions = ZERO_BI;
+  user.totalCloseTransactions = ZERO_BI;
+
   user.totalFeeVolume = ZERO_BD;
   user.totalCollateralVolume = ZERO_BD;
+  user.totalClaimVolume = ZERO_BD;
 
   user.threeHours = ZERO_BI;
   user.sixHours = ZERO_BI;
@@ -82,10 +88,7 @@ export function initializeUser(userID: string): User {
   user.twoWeeks = ZERO_BI;
   user.oneMonth = ZERO_BI;
 
-  user.totalBorrowTransactions = ZERO_BI;
-  user.totalLendTransactions = ZERO_BI;
-  user.totalClaimTransactions = ZERO_BI;
-  user.totalCloseTransactions = ZERO_BI;
+  user.currentCollateralVolume = ZERO_BD;
 
   return user;
 }
