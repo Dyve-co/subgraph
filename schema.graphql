@@ -1,0 +1,250 @@
+enum ActionType {
+  LIST,
+  BORROW,
+  CLAIM,
+  RETURN,
+}
+
+enum Duration {
+  THREE_HOURS,
+  SIX_HOURS,
+  TWELVE_HOURS,
+  ONE_DAY,
+  THREE_DAYS,
+  ONE_WEEK,
+  TWO_WEEKS,
+  ONE_MONTH,
+}
+
+"""
+OfferType
+"""
+type OfferType @entity {
+  "ID"
+  id: ID!
+
+  "Total number of bid/ask transactions"
+  totalTransactions: BigInt!
+
+  "Total bid/ask fee volume (in ETH)"
+  totalFeeVolume: BigDecimal!
+
+  "Total bid/ask collateral volume (in ETH)"
+  totalCollateralVolume: BigDecimal!
+
+  "Total durations set for bid/ask order"
+  threeHours: BigInt!
+  sixHours: BigInt!
+  twelveHours: BigInt!
+  oneDay: BigInt!
+  threeDays: BigInt!
+  oneWeek: BigInt!
+  twoWeeks: BigInt!
+  oneMonth: BigInt!
+}
+
+"""
+Actor
+"""
+type Actor @entity {
+  "ID"
+  id: ID!
+
+  "Total number of maker/taker transactions"
+  totalTransactions: BigInt!
+
+  "Total maker/taker fee volume (in ETH)"
+  totalFeeVolume: BigDecimal!
+
+  "Total maker/taker collateral volume (in ETH)"
+  totalCollateralVolume: BigDecimal!
+
+  "Total durations set for bid/ask order"
+  threeHours: BigInt!
+  sixHours: BigInt!
+  twelveHours: BigInt!
+  oneDay: BigInt!
+  threeDays: BigInt!
+  oneWeek: BigInt!
+  twoWeeks: BigInt!
+  oneMonth: BigInt!
+
+  "Ask"
+  ask: OfferType
+
+  "Bid"
+  bid: OfferType
+}
+
+
+"""
+Collection
+"""
+type Collection @entity {
+  "ID (collection address)"
+  id: ID!
+
+  "Total number of transactions in collection"
+  totalTransactions: BigInt!
+
+  "Total number of borrows in collection"
+  totalBorrowTransactions: BigInt!
+
+  "Total number of claims in collection"
+  totalClaimTransactions: BigInt!
+
+  "Total number of closes in collection"
+  totalCloseTransactions: BigInt!
+
+
+  "Total fee volume of collection (in ETH)"
+  totalFeeVolume: BigDecimal!
+
+  "Total collateral volume of collection (in ETH)"
+  totalCollateralVolume: BigDecimal!
+
+  "Total claim volume of collection (in ETH)"
+  totalClaimVolume: BigDecimal!
+
+
+  "Total durations set for bid/ask order"
+  threeHours: BigInt!
+  sixHours: BigInt!
+  twelveHours: BigInt!
+  oneDay: BigInt!
+  threeDays: BigInt!
+  oneWeek: BigInt!
+  twoWeeks: BigInt!
+  oneMonth: BigInt!
+
+
+  "Current collateral volume in collection (in ETH)"
+  currentCollateralVolume: BigDecimal!
+
+  "Taker Bid"
+  takerBid: OfferType
+
+  "Taker Ask"
+  takerAsk: OfferType
+
+  "Transactions"
+  transactions: [Transaction!]! @derivedFrom(field: "collection")
+}
+
+"""
+User
+"""
+type User @entity {
+  "ID (user address)"
+  id: ID!
+
+  "Total number of transactions from user"
+  totalTransactions: BigInt!
+
+  "Total number of borrows from user"
+  totalBorrowTransactions: BigInt!
+
+  "Total number of lends from user"
+  totalLendTransactions: BigInt!
+
+  "Total number of claims from user"
+  totalClaimTransactions: BigInt!
+
+  "Total number of closes from user"
+  totalCloseTransactions: BigInt!
+
+
+  "Total fee volume of user (in ETH)"
+  totalFeeVolume: BigDecimal!
+
+  "Total collateral volume of user (in ETH)"
+  totalCollateralVolume: BigDecimal!
+
+  "Total collateral claim volume of user (in ETH)"
+  totalClaimVolume: BigDecimal!
+
+
+  "Total durations set for bid/ask order"
+  threeHours: BigInt!
+  sixHours: BigInt!
+  twelveHours: BigInt!
+  oneDay: BigInt!
+  threeDays: BigInt!
+  oneWeek: BigInt!
+  twoWeeks: BigInt!
+  oneMonth: BigInt!
+
+  "Current collateral volume from user (in ETH)"
+  currentCollateralVolume: BigDecimal!
+
+  "Taker"
+  taker: Actor
+
+  "Maker"
+  maker: Actor
+
+  "Transactions where user is the taker side"
+  takerTransactions: [Transaction!]! @derivedFrom(field: "taker")
+
+  "Transactions where user is the maker side"
+  makerTransactions: [Transaction!]! @derivedFrom(field: "maker")
+
+  "Transactions where user is the borrower side"
+  borrowerTransactions: [Transaction!]! @derivedFrom(field: "taker")
+
+  "Transactions where user is the borrower side"
+  lenderTransactions: [Transaction!]! @derivedFrom(field: "maker")
+}
+
+"""
+Transaction
+"""
+type Transaction @entity {
+  "ID"
+  id: ID!
+
+  "Date (timestamp)"
+  date: BigInt!
+
+  "Block number"
+  block: BigInt!
+
+  "Collection"
+  collection: Collection!
+
+  "what type of action was taken"
+  actionType: ActionType!
+
+  "DyveId"
+  dyveId: BigInt!
+
+  "TokenId"
+  tokenId: BigInt!
+
+  "Returned TokenId"
+  returnedTokenId: BigInt!
+
+  "Fee (in ETH)"
+  fee: BigDecimal!
+
+  "Collateral (in ETH)"
+  collateral: BigDecimal!
+
+  "Duration"
+  duration: Duration!
+
+  "Expiry Date Timestamp"
+  expiryDateTime: BigInt!
+
+  "Taker user TODO: change to required"
+  taker: User
+
+  "Maker user TODO: change to required"
+  maker: User
+
+  "Borrower user TODO: change to required"
+  borrower: User
+
+  "Lender user TODO: change to required"
+  lender: User
+}

@@ -1,0 +1,33 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Dyve
+    network: goerli
+    source:
+      address: "0xc14a78eCb5747440167D8761bB09f973a437b9CA"
+      abi: Dyve
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - OfferType
+        - Actor
+        - Collection
+        - User
+        - Transaction
+      abis:
+        - name: Dyve
+          file: ./abis/Dyve.json
+      eventHandlers:
+        - event: Borrow(indexed address,indexed address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)
+          handler: handleTakerBid
+        - event: Close(indexed address,indexed address,uint256,uint256,address,uint256,uint256,uint8)
+          handler: handleClose
+        - event: Claim(indexed address,indexed address,uint256,uint256,address,uint256,uint8)
+          handler: handleClaim
+        - event: List(indexed address,uint256,uint256,address,uint256,uint256,uint256,uint8)
+          handler: handleMakerAsk
+      file: ./mappings/dyve.ts
