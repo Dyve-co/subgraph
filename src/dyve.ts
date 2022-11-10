@@ -2,14 +2,15 @@
 import { BigInt, TypedMap, Value, log, BigDecimal } from "@graphprotocol/graph-ts"
 import { OfferType, Actor, Collection, User, Transaction } from "../generated/schema"
 import { toBigDecimal } from "../helpers/utils";
-import { ONE_BI } from "../helpers/constants"
+import { ONE_BI, ZERO_BI } from "../helpers/constants"
 import { initializeOfferType, initializeActor, initializeCollection, initializeUser } from "../helpers/initializers"
 
 import {
-  Borrow,
-  Close,
+  TakerBid,
+  TakerAsk,
   Claim,
-  List,
+  Close,
+  CancelMultipleOrders,
 } from "../generated/Dyve/Dyve"
 
 // MakerBid == BorrowerBid
@@ -26,6 +27,7 @@ durations.set("86400", "oneDay")
 durations.set("43200", "twelveHours")
 durations.set("21600", "sixHours")
 durations.set("10800", "threeHours")
+durations.set("5", "fiveSeconds")
 
 const durationsEnum = new TypedMap<string, string>()
 durationsEnum.set("2628000", "ONE_MONTH")
@@ -36,6 +38,7 @@ durationsEnum.set("86400", "ONE_DAY")
 durationsEnum.set("43200", "TWELVE_HOURS")
 durationsEnum.set("21600", "SIX_HOURS")
 durationsEnum.set("10800", "THREE_HOURS")
+durationsEnum.set("5", "FIVE_SECONDS")
 
 function generateIds(address: string): TypedMap<string, string> {
   const ids = new TypedMap<string, string>()
@@ -49,7 +52,7 @@ function generateIds(address: string): TypedMap<string, string> {
   return ids
 }
 
-export function handleTakerBid(event: Borrow): void {
+export function handleTakerBid(event: TakerBid): void {
   // 1. Collection Taker Bid
   const collectionIds = generateIds(event.params.collection.toHex());
   let collection = Collection.load(event.params.collection.toHex());
@@ -81,13 +84,13 @@ export function handleTakerBid(event: Borrow): void {
   collectionTakerBid.save();
   
   // 2. User Taker Bid
-  const borrowerIds = generateIds(event.params.borrower.toHex());
-  let borrower = User.load(event.params.borrower.toHex());
+  const borrowerIds = generateIds(event.params.taker.toHex());
+  let borrower = User.load(event.params.taker.toHex());
   let borrowerTaker = Actor.load(borrowerIds.get("taker") as string);
   let borrowerTakerBid = OfferType.load(borrowerIds.get("takerBid") as string);
 
   if (borrower === null) {
-    borrower = initializeUser(event.params.borrower.toHex());
+    borrower = initializeUser(event.params.taker.toHex());
   }
   if (borrowerTaker === null) {
     borrowerTaker = initializeActor(borrowerIds.get("taker") as string);
@@ -120,13 +123,13 @@ export function handleTakerBid(event: Borrow): void {
   borrowerTakerBid.save();
 
   // 2. User Maker Ask
-  const lenderIds = generateIds(event.params.lender.toHex());
-  let lender = User.load(event.params.lender.toHex());
+  const lenderIds = generateIds(event.params.maker.toHex());
+  let lender = User.load(event.params.maker.toHex());
   let lenderMaker = Actor.load(lenderIds.get("maker") as string);
   let lenderMakerAsk = OfferType.load(lenderIds.get("makerAsk") as string);
 
   if (lender === null) {
-    lender = initializeUser(event.params.lender.toHex());
+    lender = initializeUser(event.params.maker.toHex());
   }
   if (lenderMaker === null) {
     lenderMaker = initializeActor(lenderIds.get("maker") as string);
@@ -158,24 +161,27 @@ export function handleTakerBid(event: Borrow): void {
   lenderMakerAsk.save();
 
   // 3. Transaction
-  const name = event.params.dyveId.toHex() + "-BORROW"
+  const name = event.params.orderHash.toHex() + "-BORROW"
   const transaction = new Transaction(name);
+  transaction.orderHash = event.params.orderHash.toHex();
+  transaction.orderNonce = event.params.orderNonce;
   transaction.date = event.block.timestamp;
   transaction.block = event.block.number;
   transaction.collection = collection.id;
   transaction.actionType = "BORROW";
-  transaction.dyveId = event.params.dyveId;
   transaction.tokenId = event.params.tokenId;
   transaction.returnedTokenId = BigInt.fromI32(-1);
   transaction.fee = toBigDecimal(event.params.fee);
   transaction.collateral = toBigDecimal(event.params.collateral);
+  // transaction.baseCollateral = toBigDecimal(event.params.baseCollateral);
+  // transaction.collateralMultiplier = toBigDecimal(event.params.collateralMultiplier);
   transaction.duration = durationsEnum.get(event.params.duration.toString()) as string;
   transaction.expiryDateTime = event.params.expiryDateTime;
-  transaction.taker = borrower.id
-  transaction.maker = lender.id
-  transaction.borrower = borrower.id
-  transaction.lender = lender.id
-  transaction.save(); 
+  transaction.taker = borrower.id;
+  transaction.maker = lender.id;
+  transaction.borrower = borrower.id;
+  transaction.lender = lender.id;
+  transaction.save();
 } 
 
 export function handleClose(event: Close): void {
@@ -195,17 +201,20 @@ export function handleClose(event: Close): void {
   borrower.save();
 
   // 3. Transaction
-  const name = event.params.dyveId.toHex() + "-CLOSE"
+  const name = event.params.orderHash.toHex() + "-CLOSE"
   const transaction = new Transaction(name);
+  transaction.orderHash = event.params.orderHash.toHex();
+  transaction.orderNonce = ZERO_BI;
   transaction.date = event.block.timestamp;
   transaction.block = event.block.number;
   transaction.collection = collection.id;
   transaction.actionType = "CLOSE";
-  transaction.dyveId = event.params.dyveId;
   transaction.tokenId = event.params.tokenId;
   transaction.returnedTokenId = event.params.returnedTokenId;
   transaction.fee = BigDecimal.fromString("0");
   transaction.collateral = toBigDecimal(event.params.collateral);
+  // transaction.baseCollateral = toBigDecimal(event.params.baseCollateral);
+  // transaction.collateralMultiplier = toBigDecimal(event.params.collateralMultiplier);
   transaction.duration = "NA";
   transaction.expiryDateTime = BigInt.fromI32(0);
   transaction.borrower = borrower.id
@@ -230,17 +239,20 @@ export function handleClaim(event: Claim): void {
   lender.save();
 
   // 3. Transaction
-  const name = event.params.dyveId.toHex() + "-CLAIM"
+  const name = event.params.orderHash.toHex() + "-CLAIM"
   const transaction = new Transaction(name);
+  transaction.orderHash = event.params.orderHash.toHex();
+  transaction.orderNonce = ZERO_BI;
   transaction.date = event.block.timestamp;
   transaction.block = event.block.number;
   transaction.collection = collection.id;
   transaction.actionType = "CLAIM";
-  transaction.dyveId = event.params.dyveId;
   transaction.tokenId = event.params.tokenId;
   transaction.returnedTokenId = BigInt.fromI32(-1);
   transaction.fee = BigDecimal.fromString("0");
   transaction.collateral = toBigDecimal(event.params.collateral);
+  // transaction.baseCollateral = toBigDecimal(event.params.baseCollateral);
+  // transaction.collateralMultiplier = toBigDecimal(event.params.collateralMultiplier);
   transaction.duration = "NA";
   transaction.expiryDateTime = BigInt.fromI32(0);
   transaction.borrower = event.params.borrower.toHex();
@@ -248,4 +260,5 @@ export function handleClaim(event: Claim): void {
   transaction.save();
 }
 
-export function handleMakerAsk(event: List): void {}
+export function handleMakerAsk(event: TakerAsk): void {}
+export function handleCancel(event: CancelMultipleOrders): void {}

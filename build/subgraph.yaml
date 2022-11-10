@@ -6,8 +6,9 @@ dataSources:
     name: Dyve
     network: goerli
     source:
-      address: "0xc14a78eCb5747440167D8761bB09f973a437b9CA"
+      address: "0x93025f594a3BfBd88EcC1eDceeD0e74805C5cF33"
       abi: Dyve
+      startBlock: 7889444
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -22,14 +23,17 @@ dataSources:
         - name: Dyve
           file: Dyve/abis/Dyve.json
       eventHandlers:
-        - event: Borrow(indexed address,indexed
-            address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)
+        - event: TakerBid(bytes32,uint256,indexed address,indexed
+            address,address,uint256,uint256,uint256,uint256,uint256,uint8)
           handler: handleTakerBid
-        - event: Close(indexed address,indexed
-            address,uint256,uint256,address,uint256,uint256,uint8)
-          handler: handleClose
-        - event: Claim(indexed address,indexed address,uint256,uint256,address,uint256,uint8)
+        - event: TakerAsk(bytes32,uint256,indexed address,indexed
+            address,address,uint256,uint256,uint256,uint256,uint256,uint8)
+          handler: handleTakerAsk
+        - event: Claim(bytes32,indexed address,indexed address,address,uint256,uint256,uint8)
           handler: handleClaim
-        - event: List(indexed address,uint256,uint256,address,uint256,uint256,uint256,uint8)
-          handler: handleMakerAsk
+        - event: Close(bytes32,indexed address,indexed
+            address,address,uint256,uint256,uint256,uint8)
+          handler: handleClose
+        - event: CancelMultipleOrders(indexed address,uint256[])
+          handler: handleCancel
       file: Dyve/Dyve.wasm

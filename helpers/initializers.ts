@@ -8,6 +8,7 @@ export function initializeOfferType(offerTypeID: string): OfferType {
   offerType.totalFeeVolume = ZERO_BD;
   offerType.totalCollateralVolume = ZERO_BD;
 
+  offerType.fiveSeconds = ZERO_BI;
   offerType.threeHours = ZERO_BI;
   offerType.sixHours = ZERO_BI;
   offerType.twelveHours = ZERO_BI;
@@ -27,6 +28,7 @@ export function initializeActor(actorID: string): Actor {
   actor.totalFeeVolume = ZERO_BD;
   actor.totalCollateralVolume = ZERO_BD;
 
+  actor.fiveSeconds = ZERO_BI;
   actor.threeHours = ZERO_BI;
   actor.sixHours = ZERO_BI;
   actor.twelveHours = ZERO_BI;
@@ -46,6 +48,7 @@ export function initializeCollection(collectionID: string): Collection {
   collection.totalFeeVolume = ZERO_BD;
   collection.totalCollateralVolume = ZERO_BD;
 
+  collection.fiveSeconds = ZERO_BI;
   collection.threeHours = ZERO_BI;
   collection.sixHours = ZERO_BI;
   collection.twelveHours = ZERO_BI;
@@ -79,6 +82,7 @@ export function initializeUser(userID: string): User {
   user.totalCollateralVolume = ZERO_BD;
   user.totalClaimVolume = ZERO_BD;
 
+  user.fiveSeconds = ZERO_BI;
   user.threeHours = ZERO_BI;
   user.sixHours = ZERO_BI;
   user.twelveHours = ZERO_BI;

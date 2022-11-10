@@ -69,6 +69,15 @@ export class OfferType extends Entity {
     this.set("totalCollateralVolume", Value.fromBigDecimal(value));
   }
 
+  get fiveSeconds(): BigInt {
+    let value = this.get("fiveSeconds");
+    return value!.toBigInt();
+  }
+
+  set fiveSeconds(value: BigInt) {
+    this.set("fiveSeconds", Value.fromBigInt(value));
+  }
+
   get threeHours(): BigInt {
     let value = this.get("threeHours");
     return value!.toBigInt();
@@ -198,6 +207,15 @@ export class Actor extends Entity {
 
   set totalCollateralVolume(value: BigDecimal) {
     this.set("totalCollateralVolume", Value.fromBigDecimal(value));
+  }
+
+  get fiveSeconds(): BigInt {
+    let value = this.get("fiveSeconds");
+    return value!.toBigInt();
+  }
+
+  set fiveSeconds(value: BigInt) {
+    this.set("fiveSeconds", Value.fromBigInt(value));
   }
 
   get threeHours(): BigInt {
@@ -399,6 +417,15 @@ export class Collection extends Entity {
 
   set totalClaimVolume(value: BigDecimal) {
     this.set("totalClaimVolume", Value.fromBigDecimal(value));
+  }
+
+  get fiveSeconds(): BigInt {
+    let value = this.get("fiveSeconds");
+    return value!.toBigInt();
+  }
+
+  set fiveSeconds(value: BigInt) {
+    this.set("fiveSeconds", Value.fromBigInt(value));
   }
 
   get threeHours(): BigInt {
@@ -629,6 +656,15 @@ export class User extends Entity {
     this.set("totalClaimVolume", Value.fromBigDecimal(value));
   }
 
+  get fiveSeconds(): BigInt {
+    let value = this.get("fiveSeconds");
+    return value!.toBigInt();
+  }
+
+  set fiveSeconds(value: BigInt) {
+    this.set("fiveSeconds", Value.fromBigInt(value));
+  }
+
   get threeHours(): BigInt {
     let value = this.get("threeHours");
     return value!.toBigInt();
@@ -812,6 +848,24 @@ export class Transaction extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get orderHash(): string {
+    let value = this.get("orderHash");
+    return value!.toString();
+  }
+
+  set orderHash(value: string) {
+    this.set("orderHash", Value.fromString(value));
+  }
+
+  get orderNonce(): BigInt {
+    let value = this.get("orderNonce");
+    return value!.toBigInt();
+  }
+
+  set orderNonce(value: BigInt) {
+    this.set("orderNonce", Value.fromBigInt(value));
+  }
+
   get date(): BigInt {
     let value = this.get("date");
     return value!.toBigInt();
@@ -846,15 +900,6 @@ export class Transaction extends Entity {
 
   set actionType(value: string) {
     this.set("actionType", Value.fromString(value));
-  }
-
-  get dyveId(): BigInt {
-    let value = this.get("dyveId");
-    return value!.toBigInt();
-  }
-
-  set dyveId(value: BigInt) {
-    this.set("dyveId", Value.fromBigInt(value));
   }
 
   get tokenId(): BigInt {

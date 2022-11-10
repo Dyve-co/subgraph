@@ -1,12 +1,12 @@
 enum ActionType {
-  LIST,
   BORROW,
   CLAIM,
-  RETURN,
+  CLOSE,
 }
 
 enum Duration {
   NA,
+  FIVE_SECONDS,
   THREE_HOURS,
   SIX_HOURS,
   TWELVE_HOURS,
@@ -34,6 +34,7 @@ type OfferType @entity {
   totalCollateralVolume: BigDecimal!
 
   "Total durations set for bid/ask order"
+  fiveSeconds: BigInt!
   threeHours: BigInt!
   sixHours: BigInt!
   twelveHours: BigInt!
@@ -61,6 +62,7 @@ type Actor @entity {
   totalCollateralVolume: BigDecimal!
 
   "Total durations set for bid/ask order"
+  fiveSeconds: BigInt!
   threeHours: BigInt!
   sixHours: BigInt!
   twelveHours: BigInt!
@@ -109,6 +111,7 @@ type Collection @entity {
 
 
   "Total durations set for bid/ask order"
+  fiveSeconds: BigInt!
   threeHours: BigInt!
   sixHours: BigInt!
   twelveHours: BigInt!
@@ -166,6 +169,7 @@ type User @entity {
 
 
   "Total durations set for bid/ask order"
+  fiveSeconds: BigInt!
   threeHours: BigInt!
   sixHours: BigInt!
   twelveHours: BigInt!
@@ -191,10 +195,10 @@ type User @entity {
   makerTransactions: [Transaction!]! @derivedFrom(field: "maker")
 
   "Transactions where user is the borrower side"
-  borrowerTransactions: [Transaction!]! @derivedFrom(field: "taker")
+  borrowerTransactions: [Transaction!]! @derivedFrom(field: "borrower")
 
   "Transactions where user is the borrower side"
-  lenderTransactions: [Transaction!]! @derivedFrom(field: "maker")
+  lenderTransactions: [Transaction!]! @derivedFrom(field: "lender")
 }
 
 """
@@ -203,6 +207,12 @@ Transaction
 type Transaction @entity {
   "ID"
   id: ID!
+
+  "Order Hash"
+  orderHash: String!
+
+  "Nonce"
+  orderNonce: BigInt!
 
   "Date (timestamp)"
   date: BigInt!
@@ -215,9 +225,6 @@ type Transaction @entity {
 
   "what type of action was taken"
   actionType: ActionType!
-
-  "DyveId"
-  dyveId: BigInt!
 
   "TokenId"
   tokenId: BigInt!
