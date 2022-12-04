@@ -3,17 +3,31 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_escrow",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_protocolFeeRecipient",
         "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newMinNonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "CancelAllOrders",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -42,6 +56,12 @@
         "internalType": "bytes32",
         "name": "orderHash",
         "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum OrderType",
+        "name": "orderType",
+        "type": "uint8"
       },
       {
         "indexed": true,
@@ -75,7 +95,13 @@
       },
       {
         "indexed": false,
-        "internalType": "enum Dyve.ListingStatus",
+        "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum Dyve.OrderStatus",
         "name": "status",
         "type": "uint8"
       }
@@ -91,6 +117,12 @@
         "internalType": "bytes32",
         "name": "orderHash",
         "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum OrderType",
+        "name": "orderType",
+        "type": "uint8"
       },
       {
         "indexed": true,
@@ -130,12 +162,103 @@
       },
       {
         "indexed": false,
-        "internalType": "enum Dyve.ListingStatus",
+        "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum Dyve.OrderStatus",
         "name": "status",
         "type": "uint8"
       }
     ],
     "name": "Close",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "orderHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum OrderType",
+        "name": "orderType",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "orderNonce",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "taker",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "maker",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "collection",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "collateral",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "duration",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "expiryDateTime",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum Dyve.OrderStatus",
+        "name": "status",
+        "type": "uint8"
+      }
+    ],
+    "name": "OrderFulfilled",
     "type": "event"
   },
   {
@@ -161,146 +284,26 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "orderHash",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "orderNonce",
-        "type": "uint256"
-      },
-      {
         "indexed": true,
         "internalType": "address",
-        "name": "taker",
+        "name": "currency",
         "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "maker",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "collection",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "collateral",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "fee",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "duration",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "expiryDateTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum Dyve.ListingStatus",
-        "name": "status",
-        "type": "uint8"
       }
     ],
-    "name": "TakerAsk",
+    "name": "addCurrencyWhitelist",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "orderHash",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "orderNonce",
-        "type": "uint256"
-      },
-      {
         "indexed": true,
         "internalType": "address",
-        "name": "taker",
+        "name": "currency",
         "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "maker",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "collection",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "collateral",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "fee",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "duration",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "expiryDateTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum Dyve.ListingStatus",
-        "name": "status",
-        "type": "uint8"
       }
     ],
-    "name": "TakerBid",
+    "name": "removeCurrencyWhitelist",
     "type": "event"
   },
   {
@@ -314,6 +317,32 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      }
+    ],
+    "name": "addWhitelistedCurrency",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "minNonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelAllOrdersForSender",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -361,58 +390,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "escrow",
-    "outputs": [
-      {
-        "internalType": "contract IEscrow",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "components": [
           {
-            "internalType": "bool",
-            "name": "isOrderAsk",
-            "type": "bool"
-          },
-          {
-            "internalType": "address",
-            "name": "taker",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "collateral",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "fee",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct OrderTypes.TakerOrder",
-        "name": "takerBid",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          {
-            "internalType": "bool",
-            "name": "isOrderAsk",
-            "type": "bool"
+            "internalType": "enum OrderType",
+            "name": "orderType",
+            "type": "uint8"
           },
           {
             "internalType": "address",
@@ -445,44 +429,48 @@
             "type": "uint256"
           },
           {
+            "internalType": "address",
+            "name": "currency",
+            "type": "address"
+          },
+          {
             "internalType": "uint256",
             "name": "nonce",
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "startTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "endTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint8",
-            "name": "v",
-            "type": "uint8"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "r",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "s",
-            "type": "bytes32"
+            "internalType": "bytes",
+            "name": "signature",
+            "type": "bytes"
           }
         ],
-        "internalType": "struct OrderTypes.MakerOrder",
-        "name": "makerAsk",
+        "internalType": "struct OrderTypes.Order",
+        "name": "order",
         "type": "tuple"
       }
     ],
-    "name": "matchAskWithTakerBid",
+    "name": "fulfillOrder",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isCurrencyWhitelisted",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -499,6 +487,11 @@
         "internalType": "bytes32",
         "name": "orderHash",
         "type": "bytes32"
+      },
+      {
+        "internalType": "enum OrderType",
+        "name": "orderType",
+        "type": "uint8"
       },
       {
         "internalType": "address payable",
@@ -531,7 +524,12 @@
         "type": "uint256"
       },
       {
-        "internalType": "enum Dyve.ListingStatus",
+        "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      },
+      {
+        "internalType": "enum Dyve.OrderStatus",
         "name": "status",
         "type": "uint8"
       }
@@ -566,6 +564,19 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      }
+    ],
+    "name": "removeWhitelistedCurrency",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
@@ -581,19 +592,6 @@
       }
     ],
     "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_escrow",
-        "type": "address"
-      }
-    ],
-    "name": "updateEscrow",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

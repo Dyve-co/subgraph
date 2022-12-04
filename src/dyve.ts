@@ -6,8 +6,7 @@ import { ONE_BI, ZERO_BI } from "../helpers/constants"
 import { initializeOfferType, initializeActor, initializeCollection, initializeUser } from "../helpers/initializers"
 
 import {
-  TakerBid,
-  TakerAsk,
+  OrderFulfilled,
   Claim,
   Close,
   CancelMultipleOrders,
@@ -40,6 +39,14 @@ durationsEnum.set("21600", "SIX_HOURS")
 durationsEnum.set("10800", "THREE_HOURS")
 durationsEnum.set("5", "FIVE_SECONDS")
 
+const orderTypesEnum = new TypedMap<number, string>()
+orderTypesEnum.set(0, "ETH_TO_ERC721")
+orderTypesEnum.set(1, "ETH_TO_ERC1155")
+orderTypesEnum.set(2, "ERC20_TO_ERC721")
+orderTypesEnum.set(3, "ERC20_TO_ERC1155")
+orderTypesEnum.set(4, "ERC721_TO_ERC20")
+orderTypesEnum.set(5, "ERC1155_TO_ERC20")
+
 function generateIds(address: string): TypedMap<string, string> {
   const ids = new TypedMap<string, string>()
   ids.set("taker", `${address}-taker`)
@@ -52,7 +59,12 @@ function generateIds(address: string): TypedMap<string, string> {
   return ids
 }
 
-export function handleTakerBid(event: TakerBid): void {
+export function handleOrderFulfilled(event: OrderFulfilled): void {
+  if ([0, 1, 2, 3].includes(event.params.orderType)) handleTakerBid(event) 
+  else handleTakerAsk(event) 
+}
+
+export function handleTakerBid(event: OrderFulfilled): void {
   // 1. Collection Taker Bid
   const collectionIds = generateIds(event.params.collection.toHex());
   let collection = Collection.load(event.params.collection.toHex());
@@ -173,6 +185,140 @@ export function handleTakerBid(event: TakerBid): void {
   transaction.returnedTokenId = BigInt.fromI32(-1);
   transaction.fee = toBigDecimal(event.params.fee);
   transaction.collateral = toBigDecimal(event.params.collateral);
+  transaction.currency = event.params.currency.toHex();
+  // transaction.baseCollateral = toBigDecimal(event.params.baseCollateral);
+  // transaction.collateralMultiplier = toBigDecimal(event.params.collateralMultiplier);
+  transaction.duration = durationsEnum.get(event.params.duration.toString()) as string;
+  transaction.expiryDateTime = event.params.expiryDateTime;
+  transaction.taker = borrower.id;
+  transaction.maker = lender.id;
+  transaction.borrower = borrower.id;
+  transaction.lender = lender.id;
+  transaction.save();
+}
+
+export function handleTakerAsk(event: OrderFulfilled): void {
+  // 1. Collection Taker Bid
+  const collectionIds = generateIds(event.params.collection.toHex());
+  let collection = Collection.load(event.params.collection.toHex());
+  let collectionTakerAsk = OfferType.load(collectionIds.get("takerAsk") as string);
+
+  if (collection === null) {
+    collection = initializeCollection(event.params.collection.toHex());
+  }
+  if (collectionTakerAsk === null) {
+    collectionTakerAsk = initializeOfferType(collectionIds.get("takerAsk") as string);
+    collection.takerAsk = collectionTakerAsk.id
+  }
+
+  const duration = durations.get(event.params.duration.toString()) as string;
+
+  collection.totalTransactions = collection.totalTransactions.plus(ONE_BI);
+  collection.totalBorrowTransactions = collection.totalBorrowTransactions.plus(ONE_BI);
+  collection.totalFeeVolume = collection.totalFeeVolume.plus(toBigDecimal(event.params.fee));
+  collection.totalCollateralVolume = collection.totalCollateralVolume.plus(toBigDecimal(event.params.collateral));
+  collection.set(duration, Value.fromBigInt(collection.get(duration)!.toBigInt().plus(ONE_BI)));
+  collection.currentCollateralVolume = collection.currentCollateralVolume.plus(toBigDecimal(event.params.collateral));
+
+  collectionTakerAsk.totalTransactions = collectionTakerAsk.totalTransactions.plus(ONE_BI);
+  collectionTakerAsk.totalFeeVolume = collectionTakerAsk.totalFeeVolume.plus(toBigDecimal(event.params.fee));
+  collectionTakerAsk.totalCollateralVolume = collectionTakerAsk.totalCollateralVolume.plus(toBigDecimal(event.params.collateral));
+  collectionTakerAsk.set(duration, Value.fromBigInt(collectionTakerAsk.get(duration)!.toBigInt().plus(ONE_BI)));
+
+  collection.save();
+  collectionTakerAsk.save();
+  
+  // 2. User Maker Bid
+  const borrowerIds = generateIds(event.params.taker.toHex());
+  let borrower = User.load(event.params.taker.toHex());
+  let borrowerMaker = Actor.load(borrowerIds.get("maker") as string);
+  let borrowerMakerBid = OfferType.load(borrowerIds.get("makerBid") as string);
+
+  if (borrower === null) {
+    borrower = initializeUser(event.params.taker.toHex());
+  }
+  if (borrowerMaker === null) {
+    borrowerMaker = initializeActor(borrowerIds.get("maker") as string);
+    borrower.maker = borrowerMaker.id;
+  }
+  if (borrowerMakerBid === null) {
+    borrowerMakerBid = initializeOfferType(borrowerIds.get("makerBid") as string);
+    borrowerMaker.bid = borrowerMakerBid.id;
+  }
+
+  borrower.totalTransactions = borrower.totalTransactions.plus(ONE_BI);
+  borrower.totalBorrowTransactions = borrower.totalBorrowTransactions.plus(ONE_BI);
+  borrower.totalFeeVolume = borrower.totalFeeVolume.plus(toBigDecimal(event.params.fee));
+  borrower.totalCollateralVolume = borrower.totalCollateralVolume.plus(toBigDecimal(event.params.collateral));
+  borrower.currentCollateralVolume = borrower.currentCollateralVolume.plus(toBigDecimal(event.params.collateral));
+  borrower.set(duration, Value.fromBigInt(borrower.get(duration)!.toBigInt().plus(ONE_BI)));
+
+  borrowerMaker.totalTransactions = borrowerMaker.totalTransactions.plus(ONE_BI);
+  borrowerMaker.totalFeeVolume = borrowerMaker.totalFeeVolume.plus(toBigDecimal(event.params.fee));
+  borrowerMaker.totalCollateralVolume = borrowerMaker.totalCollateralVolume.plus(toBigDecimal(event.params.collateral));
+  borrowerMaker.set(duration, Value.fromBigInt(borrowerMaker.get(duration)!.toBigInt().plus(ONE_BI)));
+
+  borrowerMakerBid.totalTransactions = borrowerMakerBid.totalTransactions.plus(ONE_BI);
+  borrowerMakerBid.totalFeeVolume = borrowerMakerBid.totalFeeVolume.plus(toBigDecimal(event.params.fee));
+  borrowerMakerBid.totalCollateralVolume = borrowerMakerBid.totalCollateralVolume.plus(toBigDecimal(event.params.collateral));
+  borrowerMakerBid.set(duration, Value.fromBigInt(borrowerMakerBid.get(duration)!.toBigInt().plus(ONE_BI)));
+
+  borrower.save();
+  borrowerMaker.save();
+  borrowerMakerBid.save();
+
+  // 2. User Taker Ask
+  const lenderIds = generateIds(event.params.maker.toHex());
+  let lender = User.load(event.params.maker.toHex());
+  let lenderTaker = Actor.load(lenderIds.get("maker") as string);
+  let lenderTakerAsk = OfferType.load(lenderIds.get("makerAsk") as string);
+
+  if (lender === null) {
+    lender = initializeUser(event.params.maker.toHex());
+  }
+  if (lenderTaker === null) {
+    lenderTaker = initializeActor(lenderIds.get("taker") as string);
+    lender.taker = lenderTaker.id;
+  }
+  if (lenderTakerAsk === null) {
+    lenderTakerAsk = initializeOfferType(lenderIds.get("makerAsk") as string);
+    lenderTaker.ask = lenderTakerAsk.id;
+  }
+
+  lender.totalTransactions = lender.totalTransactions.plus(ONE_BI);
+  lender.totalLendTransactions = lender.totalLendTransactions.plus(ONE_BI);
+  lender.totalFeeVolume = lender.totalFeeVolume.plus(toBigDecimal(event.params.fee));
+  lender.totalCollateralVolume = lender.totalCollateralVolume.plus(toBigDecimal(event.params.collateral));
+  lender.set(duration, Value.fromBigInt(lender.get(duration)!.toBigInt().plus(ONE_BI)));
+
+  lenderTaker.totalTransactions = lenderTaker.totalTransactions.plus(ONE_BI);
+  lenderTaker.totalFeeVolume = lenderTaker.totalFeeVolume.plus(toBigDecimal(event.params.fee));
+  lenderTaker.totalCollateralVolume = lenderTaker.totalCollateralVolume.plus(toBigDecimal(event.params.collateral));
+  lenderTaker.set(duration, Value.fromBigInt(lenderTaker.get(duration)!.toBigInt().plus(ONE_BI)));
+
+  lenderTakerAsk.totalTransactions = lenderTakerAsk.totalTransactions.plus(ONE_BI);
+  lenderTakerAsk.totalFeeVolume = lenderTakerAsk.totalFeeVolume.plus(toBigDecimal(event.params.fee));
+  lenderTakerAsk.totalCollateralVolume = lenderTakerAsk.totalCollateralVolume.plus(toBigDecimal(event.params.collateral));
+  lenderTakerAsk.set(duration, Value.fromBigInt(lenderTakerAsk.get(duration)!.toBigInt().plus(ONE_BI)));
+
+  lender.save();
+  lenderTaker.save();
+  lenderTakerAsk.save();
+
+  // 3. Transaction
+  const name = event.params.orderHash.toHex() + "-BORROW"
+  const transaction = new Transaction(name);
+  transaction.orderHash = event.params.orderHash.toHex();
+  transaction.orderNonce = event.params.orderNonce;
+  transaction.date = event.block.timestamp;
+  transaction.block = event.block.number;
+  transaction.collection = collection.id;
+  transaction.actionType = "BORROW";
+  transaction.tokenId = event.params.tokenId;
+  transaction.returnedTokenId = BigInt.fromI32(-1);
+  transaction.fee = toBigDecimal(event.params.fee);
+  transaction.collateral = toBigDecimal(event.params.collateral);
+  transaction.currency = event.params.currency.toHex();
   // transaction.baseCollateral = toBigDecimal(event.params.baseCollateral);
   // transaction.collateralMultiplier = toBigDecimal(event.params.collateralMultiplier);
   transaction.duration = durationsEnum.get(event.params.duration.toString()) as string;
@@ -213,6 +359,7 @@ export function handleClose(event: Close): void {
   transaction.returnedTokenId = event.params.returnedTokenId;
   transaction.fee = BigDecimal.fromString("0");
   transaction.collateral = toBigDecimal(event.params.collateral);
+  transaction.currency = event.params.currency.toHex();
   // transaction.baseCollateral = toBigDecimal(event.params.baseCollateral);
   // transaction.collateralMultiplier = toBigDecimal(event.params.collateralMultiplier);
   transaction.duration = "NA";
@@ -251,6 +398,7 @@ export function handleClaim(event: Claim): void {
   transaction.returnedTokenId = BigInt.fromI32(-1);
   transaction.fee = BigDecimal.fromString("0");
   transaction.collateral = toBigDecimal(event.params.collateral);
+  transaction.currency = event.params.currency.toHex();
   // transaction.baseCollateral = toBigDecimal(event.params.baseCollateral);
   // transaction.collateralMultiplier = toBigDecimal(event.params.collateralMultiplier);
   transaction.duration = "NA";
@@ -260,5 +408,4 @@ export function handleClaim(event: Claim): void {
   transaction.save();
 }
 
-export function handleMakerAsk(event: TakerAsk): void {}
 export function handleCancel(event: CancelMultipleOrders): void {}

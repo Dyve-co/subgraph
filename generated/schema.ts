@@ -857,6 +857,15 @@ export class Transaction extends Entity {
     this.set("orderHash", Value.fromString(value));
   }
 
+  get orderType(): string {
+    let value = this.get("orderType");
+    return value!.toString();
+  }
+
+  set orderType(value: string) {
+    this.set("orderType", Value.fromString(value));
+  }
+
   get orderNonce(): BigInt {
     let value = this.get("orderNonce");
     return value!.toBigInt();
@@ -936,6 +945,15 @@ export class Transaction extends Entity {
 
   set collateral(value: BigDecimal) {
     this.set("collateral", Value.fromBigDecimal(value));
+  }
+
+  get currency(): string {
+    let value = this.get("currency");
+    return value!.toString();
+  }
+
+  set currency(value: string) {
+    this.set("currency", Value.fromString(value));
   }
 
   get duration(): string {

@@ -10,6 +10,28 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class CancelAllOrders extends ethereum.Event {
+  get params(): CancelAllOrders__Params {
+    return new CancelAllOrders__Params(this);
+  }
+}
+
+export class CancelAllOrders__Params {
+  _event: CancelAllOrders;
+
+  constructor(event: CancelAllOrders) {
+    this._event = event;
+  }
+
+  get user(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get newMinNonce(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class CancelMultipleOrders extends ethereum.Event {
   get params(): CancelMultipleOrders__Params {
     return new CancelMultipleOrders__Params(this);
@@ -49,28 +71,36 @@ export class Claim__Params {
     return this._event.parameters[0].value.toBytes();
   }
 
-  get borrower(): Address {
-    return this._event.parameters[1].value.toAddress();
+  get orderType(): i32 {
+    return this._event.parameters[1].value.toI32();
   }
 
-  get lender(): Address {
+  get borrower(): Address {
     return this._event.parameters[2].value.toAddress();
   }
 
-  get collection(): Address {
+  get lender(): Address {
     return this._event.parameters[3].value.toAddress();
   }
 
-  get tokenId(): BigInt {
-    return this._event.parameters[4].value.toBigInt();
+  get collection(): Address {
+    return this._event.parameters[4].value.toAddress();
   }
 
-  get collateral(): BigInt {
+  get tokenId(): BigInt {
     return this._event.parameters[5].value.toBigInt();
   }
 
+  get collateral(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
+  }
+
+  get currency(): Address {
+    return this._event.parameters[7].value.toAddress();
+  }
+
   get status(): i32 {
-    return this._event.parameters[6].value.toI32();
+    return this._event.parameters[8].value.toI32();
   }
 }
 
@@ -91,32 +121,106 @@ export class Close__Params {
     return this._event.parameters[0].value.toBytes();
   }
 
-  get borrower(): Address {
-    return this._event.parameters[1].value.toAddress();
+  get orderType(): i32 {
+    return this._event.parameters[1].value.toI32();
   }
 
-  get lender(): Address {
+  get borrower(): Address {
     return this._event.parameters[2].value.toAddress();
   }
 
-  get collection(): Address {
+  get lender(): Address {
     return this._event.parameters[3].value.toAddress();
   }
 
-  get tokenId(): BigInt {
-    return this._event.parameters[4].value.toBigInt();
+  get collection(): Address {
+    return this._event.parameters[4].value.toAddress();
   }
 
-  get returnedTokenId(): BigInt {
+  get tokenId(): BigInt {
     return this._event.parameters[5].value.toBigInt();
   }
 
-  get collateral(): BigInt {
+  get returnedTokenId(): BigInt {
     return this._event.parameters[6].value.toBigInt();
   }
 
+  get collateral(): BigInt {
+    return this._event.parameters[7].value.toBigInt();
+  }
+
+  get currency(): Address {
+    return this._event.parameters[8].value.toAddress();
+  }
+
   get status(): i32 {
-    return this._event.parameters[7].value.toI32();
+    return this._event.parameters[9].value.toI32();
+  }
+}
+
+export class OrderFulfilled extends ethereum.Event {
+  get params(): OrderFulfilled__Params {
+    return new OrderFulfilled__Params(this);
+  }
+}
+
+export class OrderFulfilled__Params {
+  _event: OrderFulfilled;
+
+  constructor(event: OrderFulfilled) {
+    this._event = event;
+  }
+
+  get orderHash(): Bytes {
+    return this._event.parameters[0].value.toBytes();
+  }
+
+  get orderType(): i32 {
+    return this._event.parameters[1].value.toI32();
+  }
+
+  get orderNonce(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get taker(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+
+  get maker(): Address {
+    return this._event.parameters[4].value.toAddress();
+  }
+
+  get collection(): Address {
+    return this._event.parameters[5].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
+  }
+
+  get collateral(): BigInt {
+    return this._event.parameters[7].value.toBigInt();
+  }
+
+  get fee(): BigInt {
+    return this._event.parameters[8].value.toBigInt();
+  }
+
+  get currency(): Address {
+    return this._event.parameters[9].value.toAddress();
+  }
+
+  get duration(): BigInt {
+    return this._event.parameters[10].value.toBigInt();
+  }
+
+  get expiryDateTime(): BigInt {
+    return this._event.parameters[11].value.toBigInt();
+  }
+
+  get status(): i32 {
+    return this._event.parameters[12].value.toI32();
   }
 }
 
@@ -142,141 +246,65 @@ export class OwnershipTransferred__Params {
   }
 }
 
-export class TakerAsk extends ethereum.Event {
-  get params(): TakerAsk__Params {
-    return new TakerAsk__Params(this);
+export class addCurrencyWhitelist extends ethereum.Event {
+  get params(): addCurrencyWhitelist__Params {
+    return new addCurrencyWhitelist__Params(this);
   }
 }
 
-export class TakerAsk__Params {
-  _event: TakerAsk;
+export class addCurrencyWhitelist__Params {
+  _event: addCurrencyWhitelist;
 
-  constructor(event: TakerAsk) {
+  constructor(event: addCurrencyWhitelist) {
     this._event = event;
   }
 
-  get orderHash(): Bytes {
-    return this._event.parameters[0].value.toBytes();
-  }
-
-  get orderNonce(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get taker(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-
-  get maker(): Address {
-    return this._event.parameters[3].value.toAddress();
-  }
-
-  get collection(): Address {
-    return this._event.parameters[4].value.toAddress();
-  }
-
-  get tokenId(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
-  }
-
-  get collateral(): BigInt {
-    return this._event.parameters[6].value.toBigInt();
-  }
-
-  get fee(): BigInt {
-    return this._event.parameters[7].value.toBigInt();
-  }
-
-  get duration(): BigInt {
-    return this._event.parameters[8].value.toBigInt();
-  }
-
-  get expiryDateTime(): BigInt {
-    return this._event.parameters[9].value.toBigInt();
-  }
-
-  get status(): i32 {
-    return this._event.parameters[10].value.toI32();
+  get currency(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
-export class TakerBid extends ethereum.Event {
-  get params(): TakerBid__Params {
-    return new TakerBid__Params(this);
+export class removeCurrencyWhitelist extends ethereum.Event {
+  get params(): removeCurrencyWhitelist__Params {
+    return new removeCurrencyWhitelist__Params(this);
   }
 }
 
-export class TakerBid__Params {
-  _event: TakerBid;
+export class removeCurrencyWhitelist__Params {
+  _event: removeCurrencyWhitelist;
 
-  constructor(event: TakerBid) {
+  constructor(event: removeCurrencyWhitelist) {
     this._event = event;
   }
 
-  get orderHash(): Bytes {
-    return this._event.parameters[0].value.toBytes();
-  }
-
-  get orderNonce(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get taker(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-
-  get maker(): Address {
-    return this._event.parameters[3].value.toAddress();
-  }
-
-  get collection(): Address {
-    return this._event.parameters[4].value.toAddress();
-  }
-
-  get tokenId(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
-  }
-
-  get collateral(): BigInt {
-    return this._event.parameters[6].value.toBigInt();
-  }
-
-  get fee(): BigInt {
-    return this._event.parameters[7].value.toBigInt();
-  }
-
-  get duration(): BigInt {
-    return this._event.parameters[8].value.toBigInt();
-  }
-
-  get expiryDateTime(): BigInt {
-    return this._event.parameters[9].value.toBigInt();
-  }
-
-  get status(): i32 {
-    return this._event.parameters[10].value.toI32();
+  get currency(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
 export class Dyve__ordersResult {
   value0: Bytes;
-  value1: Address;
+  value1: i32;
   value2: Address;
   value3: Address;
-  value4: BigInt;
+  value4: Address;
   value5: BigInt;
   value6: BigInt;
-  value7: i32;
+  value7: BigInt;
+  value8: Address;
+  value9: i32;
 
   constructor(
     value0: Bytes,
-    value1: Address,
+    value1: i32,
     value2: Address,
     value3: Address,
-    value4: BigInt,
+    value4: Address,
     value5: BigInt,
     value6: BigInt,
-    value7: i32
+    value7: BigInt,
+    value8: Address,
+    value9: i32
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -286,20 +314,27 @@ export class Dyve__ordersResult {
     this.value5 = value5;
     this.value6 = value6;
     this.value7 = value7;
+    this.value8 = value8;
+    this.value9 = value9;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromFixedBytes(this.value0));
-    map.set("value1", ethereum.Value.fromAddress(this.value1));
+    map.set(
+      "value1",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value1))
+    );
     map.set("value2", ethereum.Value.fromAddress(this.value2));
     map.set("value3", ethereum.Value.fromAddress(this.value3));
-    map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
+    map.set("value4", ethereum.Value.fromAddress(this.value4));
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
     map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
+    map.set("value7", ethereum.Value.fromUnsignedBigInt(this.value7));
+    map.set("value8", ethereum.Value.fromAddress(this.value8));
     map.set(
-      "value7",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value7))
+      "value9",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value9))
     );
     return map;
   }
@@ -308,32 +343,40 @@ export class Dyve__ordersResult {
     return this.value0;
   }
 
-  getLender(): Address {
+  getOrderType(): i32 {
     return this.value1;
   }
 
-  getBorrower(): Address {
+  getLender(): Address {
     return this.value2;
   }
 
-  getCollection(): Address {
+  getBorrower(): Address {
     return this.value3;
   }
 
-  getTokenId(): BigInt {
+  getCollection(): Address {
     return this.value4;
   }
 
-  getExpiryDateTime(): BigInt {
+  getTokenId(): BigInt {
     return this.value5;
   }
 
-  getCollateral(): BigInt {
+  getExpiryDateTime(): BigInt {
     return this.value6;
   }
 
-  getStatus(): i32 {
+  getCollateral(): BigInt {
     return this.value7;
+  }
+
+  getCurrency(): Address {
+    return this.value8;
+  }
+
+  getStatus(): i32 {
+    return this.value9;
   }
 }
 
@@ -365,44 +408,54 @@ export class Dyve extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  escrow(): Address {
-    let result = super.call("escrow", "escrow():(address)", []);
+  isCurrencyWhitelisted(param0: Address): boolean {
+    let result = super.call(
+      "isCurrencyWhitelisted",
+      "isCurrencyWhitelisted(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
 
-    return result[0].toAddress();
+    return result[0].toBoolean();
   }
 
-  try_escrow(): ethereum.CallResult<Address> {
-    let result = super.tryCall("escrow", "escrow():(address)", []);
+  try_isCurrencyWhitelisted(param0: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isCurrencyWhitelisted",
+      "isCurrencyWhitelisted(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   orders(param0: Bytes): Dyve__ordersResult {
     let result = super.call(
       "orders",
-      "orders(bytes32):(bytes32,address,address,address,uint256,uint256,uint256,uint8)",
+      "orders(bytes32):(bytes32,uint8,address,address,address,uint256,uint256,uint256,address,uint8)",
       [ethereum.Value.fromFixedBytes(param0)]
     );
 
     return new Dyve__ordersResult(
       result[0].toBytes(),
-      result[1].toAddress(),
+      result[1].toI32(),
       result[2].toAddress(),
       result[3].toAddress(),
-      result[4].toBigInt(),
+      result[4].toAddress(),
       result[5].toBigInt(),
       result[6].toBigInt(),
-      result[7].toI32()
+      result[7].toBigInt(),
+      result[8].toAddress(),
+      result[9].toI32()
     );
   }
 
   try_orders(param0: Bytes): ethereum.CallResult<Dyve__ordersResult> {
     let result = super.tryCall(
       "orders",
-      "orders(bytes32):(bytes32,address,address,address,uint256,uint256,uint256,uint8)",
+      "orders(bytes32):(bytes32,uint8,address,address,address,uint256,uint256,uint256,address,uint8)",
       [ethereum.Value.fromFixedBytes(param0)]
     );
     if (result.reverted) {
@@ -412,13 +465,15 @@ export class Dyve extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new Dyve__ordersResult(
         value[0].toBytes(),
-        value[1].toAddress(),
+        value[1].toI32(),
         value[2].toAddress(),
         value[3].toAddress(),
-        value[4].toBigInt(),
+        value[4].toAddress(),
         value[5].toBigInt(),
         value[6].toBigInt(),
-        value[7].toI32()
+        value[7].toBigInt(),
+        value[8].toAddress(),
+        value[9].toI32()
       )
     );
   }
@@ -502,12 +557,8 @@ export class ConstructorCall__Inputs {
     this._call = call;
   }
 
-  get _escrow(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
   get _protocolFeeRecipient(): Address {
-    return this._call.inputValues[1].value.toAddress();
+    return this._call.inputValues[0].value.toAddress();
   }
 }
 
@@ -515,6 +566,66 @@ export class ConstructorCall__Outputs {
   _call: ConstructorCall;
 
   constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class AddWhitelistedCurrencyCall extends ethereum.Call {
+  get inputs(): AddWhitelistedCurrencyCall__Inputs {
+    return new AddWhitelistedCurrencyCall__Inputs(this);
+  }
+
+  get outputs(): AddWhitelistedCurrencyCall__Outputs {
+    return new AddWhitelistedCurrencyCall__Outputs(this);
+  }
+}
+
+export class AddWhitelistedCurrencyCall__Inputs {
+  _call: AddWhitelistedCurrencyCall;
+
+  constructor(call: AddWhitelistedCurrencyCall) {
+    this._call = call;
+  }
+
+  get currency(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class AddWhitelistedCurrencyCall__Outputs {
+  _call: AddWhitelistedCurrencyCall;
+
+  constructor(call: AddWhitelistedCurrencyCall) {
+    this._call = call;
+  }
+}
+
+export class CancelAllOrdersForSenderCall extends ethereum.Call {
+  get inputs(): CancelAllOrdersForSenderCall__Inputs {
+    return new CancelAllOrdersForSenderCall__Inputs(this);
+  }
+
+  get outputs(): CancelAllOrdersForSenderCall__Outputs {
+    return new CancelAllOrdersForSenderCall__Outputs(this);
+  }
+}
+
+export class CancelAllOrdersForSenderCall__Inputs {
+  _call: CancelAllOrdersForSenderCall;
+
+  constructor(call: CancelAllOrdersForSenderCall) {
+    this._call = call;
+  }
+
+  get minNonce(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class CancelAllOrdersForSenderCall__Outputs {
+  _call: CancelAllOrdersForSenderCall;
+
+  constructor(call: CancelAllOrdersForSenderCall) {
     this._call = call;
   }
 }
@@ -613,69 +724,41 @@ export class ClosePositionCall__Outputs {
   }
 }
 
-export class MatchAskWithTakerBidCall extends ethereum.Call {
-  get inputs(): MatchAskWithTakerBidCall__Inputs {
-    return new MatchAskWithTakerBidCall__Inputs(this);
+export class FulfillOrderCall extends ethereum.Call {
+  get inputs(): FulfillOrderCall__Inputs {
+    return new FulfillOrderCall__Inputs(this);
   }
 
-  get outputs(): MatchAskWithTakerBidCall__Outputs {
-    return new MatchAskWithTakerBidCall__Outputs(this);
+  get outputs(): FulfillOrderCall__Outputs {
+    return new FulfillOrderCall__Outputs(this);
   }
 }
 
-export class MatchAskWithTakerBidCall__Inputs {
-  _call: MatchAskWithTakerBidCall;
+export class FulfillOrderCall__Inputs {
+  _call: FulfillOrderCall;
 
-  constructor(call: MatchAskWithTakerBidCall) {
+  constructor(call: FulfillOrderCall) {
     this._call = call;
   }
 
-  get takerBid(): MatchAskWithTakerBidCallTakerBidStruct {
-    return changetype<MatchAskWithTakerBidCallTakerBidStruct>(
+  get order(): FulfillOrderCallOrderStruct {
+    return changetype<FulfillOrderCallOrderStruct>(
       this._call.inputValues[0].value.toTuple()
     );
   }
-
-  get makerAsk(): MatchAskWithTakerBidCallMakerAskStruct {
-    return changetype<MatchAskWithTakerBidCallMakerAskStruct>(
-      this._call.inputValues[1].value.toTuple()
-    );
-  }
 }
 
-export class MatchAskWithTakerBidCall__Outputs {
-  _call: MatchAskWithTakerBidCall;
+export class FulfillOrderCall__Outputs {
+  _call: FulfillOrderCall;
 
-  constructor(call: MatchAskWithTakerBidCall) {
+  constructor(call: FulfillOrderCall) {
     this._call = call;
   }
 }
 
-export class MatchAskWithTakerBidCallTakerBidStruct extends ethereum.Tuple {
-  get isOrderAsk(): boolean {
-    return this[0].toBoolean();
-  }
-
-  get taker(): Address {
-    return this[1].toAddress();
-  }
-
-  get collateral(): BigInt {
-    return this[2].toBigInt();
-  }
-
-  get fee(): BigInt {
-    return this[3].toBigInt();
-  }
-
-  get tokenId(): BigInt {
-    return this[4].toBigInt();
-  }
-}
-
-export class MatchAskWithTakerBidCallMakerAskStruct extends ethereum.Tuple {
-  get isOrderAsk(): boolean {
-    return this[0].toBoolean();
+export class FulfillOrderCallOrderStruct extends ethereum.Tuple {
+  get orderType(): i32 {
+    return this[0].toI32();
   }
 
   get signer(): Address {
@@ -702,28 +785,46 @@ export class MatchAskWithTakerBidCallMakerAskStruct extends ethereum.Tuple {
     return this[6].toBigInt();
   }
 
-  get nonce(): BigInt {
-    return this[7].toBigInt();
+  get currency(): Address {
+    return this[7].toAddress();
   }
 
-  get startTime(): BigInt {
+  get nonce(): BigInt {
     return this[8].toBigInt();
   }
 
-  get endTime(): BigInt {
-    return this[9].toBigInt();
+  get signature(): Bytes {
+    return this[9].toBytes();
+  }
+}
+
+export class RemoveWhitelistedCurrencyCall extends ethereum.Call {
+  get inputs(): RemoveWhitelistedCurrencyCall__Inputs {
+    return new RemoveWhitelistedCurrencyCall__Inputs(this);
   }
 
-  get v(): i32 {
-    return this[10].toI32();
+  get outputs(): RemoveWhitelistedCurrencyCall__Outputs {
+    return new RemoveWhitelistedCurrencyCall__Outputs(this);
+  }
+}
+
+export class RemoveWhitelistedCurrencyCall__Inputs {
+  _call: RemoveWhitelistedCurrencyCall;
+
+  constructor(call: RemoveWhitelistedCurrencyCall) {
+    this._call = call;
   }
 
-  get r(): Bytes {
-    return this[11].toBytes();
+  get currency(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
+}
 
-  get s(): Bytes {
-    return this[12].toBytes();
+export class RemoveWhitelistedCurrencyCall__Outputs {
+  _call: RemoveWhitelistedCurrencyCall;
+
+  constructor(call: RemoveWhitelistedCurrencyCall) {
+    this._call = call;
   }
 }
 
@@ -779,36 +880,6 @@ export class TransferOwnershipCall__Outputs {
   _call: TransferOwnershipCall;
 
   constructor(call: TransferOwnershipCall) {
-    this._call = call;
-  }
-}
-
-export class UpdateEscrowCall extends ethereum.Call {
-  get inputs(): UpdateEscrowCall__Inputs {
-    return new UpdateEscrowCall__Inputs(this);
-  }
-
-  get outputs(): UpdateEscrowCall__Outputs {
-    return new UpdateEscrowCall__Outputs(this);
-  }
-}
-
-export class UpdateEscrowCall__Inputs {
-  _call: UpdateEscrowCall;
-
-  constructor(call: UpdateEscrowCall) {
-    this._call = call;
-  }
-
-  get _escrow(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class UpdateEscrowCall__Outputs {
-  _call: UpdateEscrowCall;
-
-  constructor(call: UpdateEscrowCall) {
     this._call = call;
   }
 }
