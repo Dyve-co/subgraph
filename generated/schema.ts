@@ -893,15 +893,6 @@ export class Transaction extends Entity {
     this.set("block", Value.fromBigInt(value));
   }
 
-  get collection(): string {
-    let value = this.get("collection");
-    return value!.toString();
-  }
-
-  set collection(value: string) {
-    this.set("collection", Value.fromString(value));
-  }
-
   get actionType(): string {
     let value = this.get("actionType");
     return value!.toString();
@@ -911,6 +902,15 @@ export class Transaction extends Entity {
     this.set("actionType", Value.fromString(value));
   }
 
+  get collection(): string {
+    let value = this.get("collection");
+    return value!.toString();
+  }
+
+  set collection(value: string) {
+    this.set("collection", Value.fromString(value));
+  }
+
   get tokenId(): BigInt {
     let value = this.get("tokenId");
     return value!.toBigInt();
@@ -918,6 +918,15 @@ export class Transaction extends Entity {
 
   set tokenId(value: BigInt) {
     this.set("tokenId", Value.fromBigInt(value));
+  }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
   }
 
   get returnedTokenId(): BigInt {

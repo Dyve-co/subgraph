@@ -91,16 +91,20 @@ export class Claim__Params {
     return this._event.parameters[5].value.toBigInt();
   }
 
-  get collateral(): BigInt {
+  get amount(): BigInt {
     return this._event.parameters[6].value.toBigInt();
   }
 
+  get collateral(): BigInt {
+    return this._event.parameters[7].value.toBigInt();
+  }
+
   get currency(): Address {
-    return this._event.parameters[7].value.toAddress();
+    return this._event.parameters[8].value.toAddress();
   }
 
   get status(): i32 {
-    return this._event.parameters[8].value.toI32();
+    return this._event.parameters[9].value.toI32();
   }
 }
 
@@ -141,20 +145,24 @@ export class Close__Params {
     return this._event.parameters[5].value.toBigInt();
   }
 
-  get returnedTokenId(): BigInt {
+  get amount(): BigInt {
     return this._event.parameters[6].value.toBigInt();
   }
 
-  get collateral(): BigInt {
+  get returnedTokenId(): BigInt {
     return this._event.parameters[7].value.toBigInt();
   }
 
+  get collateral(): BigInt {
+    return this._event.parameters[8].value.toBigInt();
+  }
+
   get currency(): Address {
-    return this._event.parameters[8].value.toAddress();
+    return this._event.parameters[9].value.toAddress();
   }
 
   get status(): i32 {
-    return this._event.parameters[9].value.toI32();
+    return this._event.parameters[10].value.toI32();
   }
 }
 
@@ -199,28 +207,32 @@ export class OrderFulfilled__Params {
     return this._event.parameters[6].value.toBigInt();
   }
 
-  get collateral(): BigInt {
+  get amount(): BigInt {
     return this._event.parameters[7].value.toBigInt();
   }
 
-  get fee(): BigInt {
+  get collateral(): BigInt {
     return this._event.parameters[8].value.toBigInt();
   }
 
+  get fee(): BigInt {
+    return this._event.parameters[9].value.toBigInt();
+  }
+
   get currency(): Address {
-    return this._event.parameters[9].value.toAddress();
+    return this._event.parameters[10].value.toAddress();
   }
 
   get duration(): BigInt {
-    return this._event.parameters[10].value.toBigInt();
-  }
-
-  get expiryDateTime(): BigInt {
     return this._event.parameters[11].value.toBigInt();
   }
 
+  get expiryDateTime(): BigInt {
+    return this._event.parameters[12].value.toBigInt();
+  }
+
   get status(): i32 {
-    return this._event.parameters[12].value.toI32();
+    return this._event.parameters[13].value.toI32();
   }
 }
 
@@ -246,38 +258,74 @@ export class OwnershipTransferred__Params {
   }
 }
 
-export class addCurrencyWhitelist extends ethereum.Event {
-  get params(): addCurrencyWhitelist__Params {
-    return new addCurrencyWhitelist__Params(this);
+export class ProtocolFeeManagerUpdated extends ethereum.Event {
+  get params(): ProtocolFeeManagerUpdated__Params {
+    return new ProtocolFeeManagerUpdated__Params(this);
   }
 }
 
-export class addCurrencyWhitelist__Params {
-  _event: addCurrencyWhitelist;
+export class ProtocolFeeManagerUpdated__Params {
+  _event: ProtocolFeeManagerUpdated;
 
-  constructor(event: addCurrencyWhitelist) {
+  constructor(event: ProtocolFeeManagerUpdated) {
     this._event = event;
   }
 
-  get currency(): Address {
+  get protocolFeeManagerAddress(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 }
 
-export class removeCurrencyWhitelist extends ethereum.Event {
-  get params(): removeCurrencyWhitelist__Params {
-    return new removeCurrencyWhitelist__Params(this);
+export class ProtocolFeeRecipientUpdated extends ethereum.Event {
+  get params(): ProtocolFeeRecipientUpdated__Params {
+    return new ProtocolFeeRecipientUpdated__Params(this);
   }
 }
 
-export class removeCurrencyWhitelist__Params {
-  _event: removeCurrencyWhitelist;
+export class ProtocolFeeRecipientUpdated__Params {
+  _event: ProtocolFeeRecipientUpdated;
 
-  constructor(event: removeCurrencyWhitelist) {
+  constructor(event: ProtocolFeeRecipientUpdated) {
     this._event = event;
   }
 
-  get currency(): Address {
+  get _protocolFeeRecipient(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class ReservoirOracleAddressUpdated extends ethereum.Event {
+  get params(): ReservoirOracleAddressUpdated__Params {
+    return new ReservoirOracleAddressUpdated__Params(this);
+  }
+}
+
+export class ReservoirOracleAddressUpdated__Params {
+  _event: ReservoirOracleAddressUpdated;
+
+  constructor(event: ReservoirOracleAddressUpdated) {
+    this._event = event;
+  }
+
+  get reservoirOracleAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class WhitelistedCurrenciesUpdated extends ethereum.Event {
+  get params(): WhitelistedCurrenciesUpdated__Params {
+    return new WhitelistedCurrenciesUpdated__Params(this);
+  }
+}
+
+export class WhitelistedCurrenciesUpdated__Params {
+  _event: WhitelistedCurrenciesUpdated;
+
+  constructor(event: WhitelistedCurrenciesUpdated) {
+    this._event = event;
+  }
+
+  get whitelistedCurrenciesAddress(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 }
@@ -291,8 +339,9 @@ export class Dyve__ordersResult {
   value5: BigInt;
   value6: BigInt;
   value7: BigInt;
-  value8: Address;
-  value9: i32;
+  value8: BigInt;
+  value9: Address;
+  value10: i32;
 
   constructor(
     value0: Bytes,
@@ -303,8 +352,9 @@ export class Dyve__ordersResult {
     value5: BigInt,
     value6: BigInt,
     value7: BigInt,
-    value8: Address,
-    value9: i32
+    value8: BigInt,
+    value9: Address,
+    value10: i32
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -316,6 +366,7 @@ export class Dyve__ordersResult {
     this.value7 = value7;
     this.value8 = value8;
     this.value9 = value9;
+    this.value10 = value10;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -331,10 +382,11 @@ export class Dyve__ordersResult {
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
     map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
     map.set("value7", ethereum.Value.fromUnsignedBigInt(this.value7));
-    map.set("value8", ethereum.Value.fromAddress(this.value8));
+    map.set("value8", ethereum.Value.fromUnsignedBigInt(this.value8));
+    map.set("value9", ethereum.Value.fromAddress(this.value9));
     map.set(
-      "value9",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value9))
+      "value10",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value10))
     );
     return map;
   }
@@ -363,20 +415,24 @@ export class Dyve__ordersResult {
     return this.value5;
   }
 
-  getExpiryDateTime(): BigInt {
+  getAmount(): BigInt {
     return this.value6;
   }
 
-  getCollateral(): BigInt {
+  getExpiryDateTime(): BigInt {
     return this.value7;
   }
 
-  getCurrency(): Address {
+  getCollateral(): BigInt {
     return this.value8;
   }
 
-  getStatus(): i32 {
+  getCurrency(): Address {
     return this.value9;
+  }
+
+  getStatus(): i32 {
+    return this.value10;
   }
 }
 
@@ -385,20 +441,20 @@ export class Dyve extends ethereum.SmartContract {
     return new Dyve("Dyve", address);
   }
 
-  DOMAIN_SEPARATOR(): Bytes {
+  INTERFACE_ID_ERC1155(): Bytes {
     let result = super.call(
-      "DOMAIN_SEPARATOR",
-      "DOMAIN_SEPARATOR():(bytes32)",
+      "INTERFACE_ID_ERC1155",
+      "INTERFACE_ID_ERC1155():(bytes4)",
       []
     );
 
     return result[0].toBytes();
   }
 
-  try_DOMAIN_SEPARATOR(): ethereum.CallResult<Bytes> {
+  try_INTERFACE_ID_ERC1155(): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
-      "DOMAIN_SEPARATOR",
-      "DOMAIN_SEPARATOR():(bytes32)",
+      "INTERFACE_ID_ERC1155",
+      "INTERFACE_ID_ERC1155():(bytes4)",
       []
     );
     if (result.reverted) {
@@ -408,33 +464,48 @@ export class Dyve extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  isCurrencyWhitelisted(param0: Address): boolean {
+  INTERFACE_ID_ERC721(): Bytes {
     let result = super.call(
-      "isCurrencyWhitelisted",
-      "isCurrencyWhitelisted(address):(bool)",
-      [ethereum.Value.fromAddress(param0)]
+      "INTERFACE_ID_ERC721",
+      "INTERFACE_ID_ERC721():(bytes4)",
+      []
     );
 
-    return result[0].toBoolean();
+    return result[0].toBytes();
   }
 
-  try_isCurrencyWhitelisted(param0: Address): ethereum.CallResult<boolean> {
+  try_INTERFACE_ID_ERC721(): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
-      "isCurrencyWhitelisted",
-      "isCurrencyWhitelisted(address):(bool)",
-      [ethereum.Value.fromAddress(param0)]
+      "INTERFACE_ID_ERC721",
+      "INTERFACE_ID_ERC721():(bytes4)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
+  nonceLimit(): BigInt {
+    let result = super.call("nonceLimit", "nonceLimit():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_nonceLimit(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("nonceLimit", "nonceLimit():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   orders(param0: Bytes): Dyve__ordersResult {
     let result = super.call(
       "orders",
-      "orders(bytes32):(bytes32,uint8,address,address,address,uint256,uint256,uint256,address,uint8)",
+      "orders(bytes32):(bytes32,uint8,address,address,address,uint256,uint256,uint256,uint256,address,uint8)",
       [ethereum.Value.fromFixedBytes(param0)]
     );
 
@@ -447,15 +518,16 @@ export class Dyve extends ethereum.SmartContract {
       result[5].toBigInt(),
       result[6].toBigInt(),
       result[7].toBigInt(),
-      result[8].toAddress(),
-      result[9].toI32()
+      result[8].toBigInt(),
+      result[9].toAddress(),
+      result[10].toI32()
     );
   }
 
   try_orders(param0: Bytes): ethereum.CallResult<Dyve__ordersResult> {
     let result = super.tryCall(
       "orders",
-      "orders(bytes32):(bytes32,uint8,address,address,address,uint256,uint256,uint256,address,uint8)",
+      "orders(bytes32):(bytes32,uint8,address,address,address,uint256,uint256,uint256,uint256,address,uint8)",
       [ethereum.Value.fromFixedBytes(param0)]
     );
     if (result.reverted) {
@@ -472,8 +544,9 @@ export class Dyve extends ethereum.SmartContract {
         value[5].toBigInt(),
         value[6].toBigInt(),
         value[7].toBigInt(),
-        value[8].toAddress(),
-        value[9].toI32()
+        value[8].toBigInt(),
+        value[9].toAddress(),
+        value[10].toI32()
       )
     );
   }
@@ -486,6 +559,29 @@ export class Dyve extends ethereum.SmartContract {
 
   try_owner(): ethereum.CallResult<Address> {
     let result = super.tryCall("owner", "owner():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  protocolFeeManager(): Address {
+    let result = super.call(
+      "protocolFeeManager",
+      "protocolFeeManager():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_protocolFeeManager(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "protocolFeeManager",
+      "protocolFeeManager():(address)",
+      []
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -507,6 +603,29 @@ export class Dyve extends ethereum.SmartContract {
     let result = super.tryCall(
       "protocolFeeRecipient",
       "protocolFeeRecipient():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  reservoirOracleAddress(): Address {
+    let result = super.call(
+      "reservoirOracleAddress",
+      "reservoirOracleAddress():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_reservoirOracleAddress(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "reservoirOracleAddress",
+      "reservoirOracleAddress():(address)",
       []
     );
     if (result.reverted) {
@@ -538,6 +657,29 @@ export class Dyve extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
+
+  whitelistedCurrencies(): Address {
+    let result = super.call(
+      "whitelistedCurrencies",
+      "whitelistedCurrencies():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_whitelistedCurrencies(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "whitelistedCurrencies",
+      "whitelistedCurrencies():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
 }
 
 export class ConstructorCall extends ethereum.Call {
@@ -557,8 +699,20 @@ export class ConstructorCall__Inputs {
     this._call = call;
   }
 
-  get _protocolFeeRecipient(): Address {
+  get whitelistedCurrenciesAddress(): Address {
     return this._call.inputValues[0].value.toAddress();
+  }
+
+  get protocolFeeManagerAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _reservoirOracleAddress(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get _protocolFeeRecipient(): Address {
+    return this._call.inputValues[3].value.toAddress();
   }
 }
 
@@ -566,36 +720,6 @@ export class ConstructorCall__Outputs {
   _call: ConstructorCall;
 
   constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-}
-
-export class AddWhitelistedCurrencyCall extends ethereum.Call {
-  get inputs(): AddWhitelistedCurrencyCall__Inputs {
-    return new AddWhitelistedCurrencyCall__Inputs(this);
-  }
-
-  get outputs(): AddWhitelistedCurrencyCall__Outputs {
-    return new AddWhitelistedCurrencyCall__Outputs(this);
-  }
-}
-
-export class AddWhitelistedCurrencyCall__Inputs {
-  _call: AddWhitelistedCurrencyCall;
-
-  constructor(call: AddWhitelistedCurrencyCall) {
-    this._call = call;
-  }
-
-  get currency(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class AddWhitelistedCurrencyCall__Outputs {
-  _call: AddWhitelistedCurrencyCall;
-
-  constructor(call: AddWhitelistedCurrencyCall) {
     this._call = call;
   }
 }
@@ -714,6 +838,12 @@ export class ClosePositionCall__Inputs {
   get returnTokenId(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
+
+  get message(): ClosePositionCallMessageStruct {
+    return changetype<ClosePositionCallMessageStruct>(
+      this._call.inputValues[2].value.toTuple()
+    );
+  }
 }
 
 export class ClosePositionCall__Outputs {
@@ -721,6 +851,24 @@ export class ClosePositionCall__Outputs {
 
   constructor(call: ClosePositionCall) {
     this._call = call;
+  }
+}
+
+export class ClosePositionCallMessageStruct extends ethereum.Tuple {
+  get id(): Bytes {
+    return this[0].toBytes();
+  }
+
+  get payload(): Bytes {
+    return this[1].toBytes();
+  }
+
+  get timestamp(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get signature(): Bytes {
+    return this[3].toBytes();
   }
 }
 
@@ -744,6 +892,12 @@ export class FulfillOrderCall__Inputs {
   get order(): FulfillOrderCallOrderStruct {
     return changetype<FulfillOrderCallOrderStruct>(
       this._call.inputValues[0].value.toTuple()
+    );
+  }
+
+  get message(): FulfillOrderCallMessageStruct {
+    return changetype<FulfillOrderCallMessageStruct>(
+      this._call.inputValues[1].value.toTuple()
     );
   }
 }
@@ -773,58 +927,62 @@ export class FulfillOrderCallOrderStruct extends ethereum.Tuple {
     return this[3].toBigInt();
   }
 
-  get duration(): BigInt {
+  get amount(): BigInt {
     return this[4].toBigInt();
   }
 
-  get collateral(): BigInt {
+  get duration(): BigInt {
     return this[5].toBigInt();
   }
 
-  get fee(): BigInt {
+  get collateral(): BigInt {
     return this[6].toBigInt();
   }
 
+  get fee(): BigInt {
+    return this[7].toBigInt();
+  }
+
   get currency(): Address {
-    return this[7].toAddress();
+    return this[8].toAddress();
+  }
+
+  get premiumCollection(): Address {
+    return this[9].toAddress();
+  }
+
+  get premiumTokenId(): BigInt {
+    return this[10].toBigInt();
   }
 
   get nonce(): BigInt {
-    return this[8].toBigInt();
+    return this[11].toBigInt();
+  }
+
+  get endTime(): BigInt {
+    return this[12].toBigInt();
   }
 
   get signature(): Bytes {
-    return this[9].toBytes();
+    return this[13].toBytes();
   }
 }
 
-export class RemoveWhitelistedCurrencyCall extends ethereum.Call {
-  get inputs(): RemoveWhitelistedCurrencyCall__Inputs {
-    return new RemoveWhitelistedCurrencyCall__Inputs(this);
+export class FulfillOrderCallMessageStruct extends ethereum.Tuple {
+  get id(): Bytes {
+    return this[0].toBytes();
   }
 
-  get outputs(): RemoveWhitelistedCurrencyCall__Outputs {
-    return new RemoveWhitelistedCurrencyCall__Outputs(this);
-  }
-}
-
-export class RemoveWhitelistedCurrencyCall__Inputs {
-  _call: RemoveWhitelistedCurrencyCall;
-
-  constructor(call: RemoveWhitelistedCurrencyCall) {
-    this._call = call;
+  get payload(): Bytes {
+    return this[1].toBytes();
   }
 
-  get currency(): Address {
-    return this._call.inputValues[0].value.toAddress();
+  get timestamp(): BigInt {
+    return this[2].toBigInt();
   }
-}
 
-export class RemoveWhitelistedCurrencyCall__Outputs {
-  _call: RemoveWhitelistedCurrencyCall;
-
-  constructor(call: RemoveWhitelistedCurrencyCall) {
-    this._call = call;
+  get signature(): Bytes {
+    return this[3].toBytes();
   }
 }
 
@@ -880,6 +1038,126 @@ export class TransferOwnershipCall__Outputs {
   _call: TransferOwnershipCall;
 
   constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateProtocolFeeManagerCall extends ethereum.Call {
+  get inputs(): UpdateProtocolFeeManagerCall__Inputs {
+    return new UpdateProtocolFeeManagerCall__Inputs(this);
+  }
+
+  get outputs(): UpdateProtocolFeeManagerCall__Outputs {
+    return new UpdateProtocolFeeManagerCall__Outputs(this);
+  }
+}
+
+export class UpdateProtocolFeeManagerCall__Inputs {
+  _call: UpdateProtocolFeeManagerCall;
+
+  constructor(call: UpdateProtocolFeeManagerCall) {
+    this._call = call;
+  }
+
+  get _protocolFeeManager(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class UpdateProtocolFeeManagerCall__Outputs {
+  _call: UpdateProtocolFeeManagerCall;
+
+  constructor(call: UpdateProtocolFeeManagerCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateProtocolFeeRecipientCall extends ethereum.Call {
+  get inputs(): UpdateProtocolFeeRecipientCall__Inputs {
+    return new UpdateProtocolFeeRecipientCall__Inputs(this);
+  }
+
+  get outputs(): UpdateProtocolFeeRecipientCall__Outputs {
+    return new UpdateProtocolFeeRecipientCall__Outputs(this);
+  }
+}
+
+export class UpdateProtocolFeeRecipientCall__Inputs {
+  _call: UpdateProtocolFeeRecipientCall;
+
+  constructor(call: UpdateProtocolFeeRecipientCall) {
+    this._call = call;
+  }
+
+  get _protocolFeeRecipient(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class UpdateProtocolFeeRecipientCall__Outputs {
+  _call: UpdateProtocolFeeRecipientCall;
+
+  constructor(call: UpdateProtocolFeeRecipientCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateReservoirOracleAddressCall extends ethereum.Call {
+  get inputs(): UpdateReservoirOracleAddressCall__Inputs {
+    return new UpdateReservoirOracleAddressCall__Inputs(this);
+  }
+
+  get outputs(): UpdateReservoirOracleAddressCall__Outputs {
+    return new UpdateReservoirOracleAddressCall__Outputs(this);
+  }
+}
+
+export class UpdateReservoirOracleAddressCall__Inputs {
+  _call: UpdateReservoirOracleAddressCall;
+
+  constructor(call: UpdateReservoirOracleAddressCall) {
+    this._call = call;
+  }
+
+  get _reservoirOracleAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class UpdateReservoirOracleAddressCall__Outputs {
+  _call: UpdateReservoirOracleAddressCall;
+
+  constructor(call: UpdateReservoirOracleAddressCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateWhitelistedCurrenciesCall extends ethereum.Call {
+  get inputs(): UpdateWhitelistedCurrenciesCall__Inputs {
+    return new UpdateWhitelistedCurrenciesCall__Inputs(this);
+  }
+
+  get outputs(): UpdateWhitelistedCurrenciesCall__Outputs {
+    return new UpdateWhitelistedCurrenciesCall__Outputs(this);
+  }
+}
+
+export class UpdateWhitelistedCurrenciesCall__Inputs {
+  _call: UpdateWhitelistedCurrenciesCall;
+
+  constructor(call: UpdateWhitelistedCurrenciesCall) {
+    this._call = call;
+  }
+
+  get _whitelistedCurrencies(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class UpdateWhitelistedCurrenciesCall__Outputs {
+  _call: UpdateWhitelistedCurrenciesCall;
+
+  constructor(call: UpdateWhitelistedCurrenciesCall) {
     this._call = call;
   }
 }

@@ -6,9 +6,9 @@ dataSources:
     name: Dyve
     network: goerli
     source:
-      address: "0xc40F5CAa21f611FFCAb30CB0ba67abbE91c00c51"
+      address: "0xD88Ea7A922F7F3864c9774D38fA0e3fABbDc4Cd0"
       abi: Dyve
-      startBlock: 8071258
+      startBlock: 8374249
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -24,13 +24,13 @@ dataSources:
           file: Dyve/abis/Dyve.json
       eventHandlers:
         - event: OrderFulfilled(bytes32,uint8,uint256,indexed address,indexed
-            address,address,uint256,uint256,uint256,address,uint256,uint256,uint8)
+            address,address,uint256,uint256,uint256,uint256,address,uint256,uint256,uint8)
           handler: handleOrderFulfilled
         - event: Claim(bytes32,uint8,indexed address,indexed
-            address,address,uint256,uint256,address,uint8)
+            address,address,uint256,uint256,uint256,address,uint8)
           handler: handleClaim
         - event: Close(bytes32,uint8,indexed address,indexed
-            address,address,uint256,uint256,uint256,address,uint8)
+            address,address,uint256,uint256,uint256,uint256,address,uint8)
           handler: handleClose
         - event: CancelMultipleOrders(indexed address,uint256[])
           handler: handleCancel
