@@ -219,6 +219,9 @@ type Transaction @entity {
   "ID"
   id: ID!
 
+  "Transaction Hash"
+  transactionHash: String!
+
   "Order Hash"
   orderHash: String!
 
@@ -234,17 +237,20 @@ type Transaction @entity {
   "Block number"
   block: BigInt!
 
-  "Collection"
-  collection: Collection!
-
   "what type of action was taken"
   actionType: ActionType!
+
+  "Collection"
+  collection: Collection!
 
   "TokenId"
   tokenId: BigInt!
 
   "Returned TokenId"
   returnedTokenId: BigInt!
+
+  "Amount"
+  amount: BigInt!
 
   "Fee (in ETH)"
   fee: BigDecimal!

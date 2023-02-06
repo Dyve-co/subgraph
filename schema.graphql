@@ -219,6 +219,9 @@ type Transaction @entity {
   "ID"
   id: ID!
 
+  "Transaction Hash"
+  transactionHash: String!
+
   "Order Hash"
   orderHash: String!
 

@@ -848,6 +848,15 @@ export class Transaction extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get transactionHash(): string {
+    let value = this.get("transactionHash");
+    return value!.toString();
+  }
+
+  set transactionHash(value: string) {
+    this.set("transactionHash", Value.fromString(value));
+  }
+
   get orderHash(): string {
     let value = this.get("orderHash");
     return value!.toString();
@@ -920,15 +929,6 @@ export class Transaction extends Entity {
     this.set("tokenId", Value.fromBigInt(value));
   }
 
-  get amount(): BigInt {
-    let value = this.get("amount");
-    return value!.toBigInt();
-  }
-
-  set amount(value: BigInt) {
-    this.set("amount", Value.fromBigInt(value));
-  }
-
   get returnedTokenId(): BigInt {
     let value = this.get("returnedTokenId");
     return value!.toBigInt();
@@ -936,6 +936,15 @@ export class Transaction extends Entity {
 
   set returnedTokenId(value: BigInt) {
     this.set("returnedTokenId", Value.fromBigInt(value));
+  }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
   }
 
   get fee(): BigDecimal {

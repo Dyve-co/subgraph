@@ -175,7 +175,9 @@ export function handleTakerBid(event: OrderFulfilled): void {
   // 3. Transaction
   const name = event.params.orderHash.toHex() + "-BORROW"
   const transaction = new Transaction(name);
+  transaction.transactionHash = event.transaction.hash.toHex();
   transaction.orderHash = event.params.orderHash.toHex();
+  transaction.orderType = orderTypesEnum.get(event.params.orderType) as string;
   transaction.orderNonce = event.params.orderNonce;
   transaction.date = event.block.timestamp;
   transaction.block = event.block.number;
@@ -309,7 +311,9 @@ export function handleTakerAsk(event: OrderFulfilled): void {
   // 3. Transaction
   const name = event.params.orderHash.toHex() + "-BORROW"
   const transaction = new Transaction(name);
+  transaction.transactionHash = event.transaction.hash.toHex();
   transaction.orderHash = event.params.orderHash.toHex();
+  transaction.orderType = orderTypesEnum.get(event.params.orderType) as string;
   transaction.orderNonce = event.params.orderNonce;
   transaction.date = event.block.timestamp;
   transaction.block = event.block.number;
@@ -351,7 +355,9 @@ export function handleClose(event: Close): void {
   // 3. Transaction
   const name = event.params.orderHash.toHex() + "-CLOSE"
   const transaction = new Transaction(name);
+  transaction.transactionHash = event.transaction.hash.toHex();
   transaction.orderHash = event.params.orderHash.toHex();
+  transaction.orderType = orderTypesEnum.get(event.params.orderType) as string;
   transaction.orderNonce = ZERO_BI;
   transaction.date = event.block.timestamp;
   transaction.block = event.block.number;
@@ -391,7 +397,9 @@ export function handleClaim(event: Claim): void {
   // 3. Transaction
   const name = event.params.orderHash.toHex() + "-CLAIM"
   const transaction = new Transaction(name);
+  transaction.transactionHash = event.transaction.hash.toHex();
   transaction.orderHash = event.params.orderHash.toHex();
+  transaction.orderType = orderTypesEnum.get(event.params.orderType) as string;
   transaction.orderNonce = ZERO_BI;
   transaction.date = event.block.timestamp;
   transaction.block = event.block.number;
