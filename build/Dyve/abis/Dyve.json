@@ -72,11 +72,6 @@
   },
   {
     "inputs": [],
-    "name": "InvalidId",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "InvalidMessage",
     "type": "error"
   },
@@ -129,17 +124,7 @@
   },
   {
     "inputs": [],
-    "name": "InvalidSignatureLength",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "InvalidSigner",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InvalidTimestamp",
     "type": "error"
   },
   {
@@ -483,11 +468,24 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "reservoirOracleAddress",
+        "name": "_reservoirOracleAddress",
         "type": "address"
       }
     ],
-    "name": "ReservoirOracleAddressUpdated",
+    "name": "ReserovirOracleAddressUpadted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "reservoirOracle",
+        "type": "address"
+      }
+    ],
+    "name": "ReservoirOracleUpdated",
     "type": "event"
   },
   {
@@ -524,6 +522,19 @@
         "internalType": "bytes4",
         "name": "",
         "type": "bytes4"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "bps",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -603,7 +614,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct ReservoirOracle.Message",
+        "internalType": "struct IReservoirOracle.Message",
         "name": "message",
         "type": "tuple"
       }
@@ -715,7 +726,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct ReservoirOracle.Message",
+        "internalType": "struct IReservoirOracle.Message",
         "name": "message",
         "type": "tuple"
       }
@@ -855,6 +866,19 @@
   },
   {
     "inputs": [],
+    "name": "reservoirOracle",
+    "outputs": [
+      {
+        "internalType": "contract IReservoirOracle",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "reservoirOracleAddress",
     "outputs": [
       {
@@ -909,11 +933,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_reservoirOracleAddress",
+        "name": "_reservoirOracle",
         "type": "address"
       }
     ],
-    "name": "updateReservoirOracleAddress",
+    "name": "updateReservoirOracle",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

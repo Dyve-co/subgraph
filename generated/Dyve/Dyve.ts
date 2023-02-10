@@ -294,20 +294,38 @@ export class ProtocolFeeRecipientUpdated__Params {
   }
 }
 
-export class ReservoirOracleAddressUpdated extends ethereum.Event {
-  get params(): ReservoirOracleAddressUpdated__Params {
-    return new ReservoirOracleAddressUpdated__Params(this);
+export class ReserovirOracleAddressUpadted extends ethereum.Event {
+  get params(): ReserovirOracleAddressUpadted__Params {
+    return new ReserovirOracleAddressUpadted__Params(this);
   }
 }
 
-export class ReservoirOracleAddressUpdated__Params {
-  _event: ReservoirOracleAddressUpdated;
+export class ReserovirOracleAddressUpadted__Params {
+  _event: ReserovirOracleAddressUpadted;
 
-  constructor(event: ReservoirOracleAddressUpdated) {
+  constructor(event: ReserovirOracleAddressUpadted) {
     this._event = event;
   }
 
-  get reservoirOracleAddress(): Address {
+  get _reservoirOracleAddress(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class ReservoirOracleUpdated extends ethereum.Event {
+  get params(): ReservoirOracleUpdated__Params {
+    return new ReservoirOracleUpdated__Params(this);
+  }
+}
+
+export class ReservoirOracleUpdated__Params {
+  _event: ReservoirOracleUpdated;
+
+  constructor(event: ReservoirOracleUpdated) {
+    this._event = event;
+  }
+
+  get reservoirOracle(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 }
@@ -487,6 +505,21 @@ export class Dyve extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
+  bps(): BigInt {
+    let result = super.call("bps", "bps():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_bps(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("bps", "bps():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   nonceLimit(): BigInt {
     let result = super.call("nonceLimit", "nonceLimit():(uint256)", []);
 
@@ -603,6 +636,29 @@ export class Dyve extends ethereum.SmartContract {
     let result = super.tryCall(
       "protocolFeeRecipient",
       "protocolFeeRecipient():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  reservoirOracle(): Address {
+    let result = super.call(
+      "reservoirOracle",
+      "reservoirOracle():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_reservoirOracle(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "reservoirOracle",
+      "reservoirOracle():(address)",
       []
     );
     if (result.reverted) {
@@ -1102,32 +1158,32 @@ export class UpdateProtocolFeeRecipientCall__Outputs {
   }
 }
 
-export class UpdateReservoirOracleAddressCall extends ethereum.Call {
-  get inputs(): UpdateReservoirOracleAddressCall__Inputs {
-    return new UpdateReservoirOracleAddressCall__Inputs(this);
+export class UpdateReservoirOracleCall extends ethereum.Call {
+  get inputs(): UpdateReservoirOracleCall__Inputs {
+    return new UpdateReservoirOracleCall__Inputs(this);
   }
 
-  get outputs(): UpdateReservoirOracleAddressCall__Outputs {
-    return new UpdateReservoirOracleAddressCall__Outputs(this);
+  get outputs(): UpdateReservoirOracleCall__Outputs {
+    return new UpdateReservoirOracleCall__Outputs(this);
   }
 }
 
-export class UpdateReservoirOracleAddressCall__Inputs {
-  _call: UpdateReservoirOracleAddressCall;
+export class UpdateReservoirOracleCall__Inputs {
+  _call: UpdateReservoirOracleCall;
 
-  constructor(call: UpdateReservoirOracleAddressCall) {
+  constructor(call: UpdateReservoirOracleCall) {
     this._call = call;
   }
 
-  get _reservoirOracleAddress(): Address {
+  get _reservoirOracle(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
 
-export class UpdateReservoirOracleAddressCall__Outputs {
-  _call: UpdateReservoirOracleAddressCall;
+export class UpdateReservoirOracleCall__Outputs {
+  _call: UpdateReservoirOracleCall;
 
-  constructor(call: UpdateReservoirOracleAddressCall) {
+  constructor(call: UpdateReservoirOracleCall) {
     this._call = call;
   }
 }

@@ -6,9 +6,9 @@ dataSources:
     name: Dyve
     network: goerli
     source:
-      address: "0x0452958DF11c457b097F47f9A057e0fe1e284F43"
+      address: "0xCB05E911204e1A4fee8962E34D134771799BF729"
       abi: Dyve
-      startBlock: 8443594
+      startBlock: 8448112
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
