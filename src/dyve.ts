@@ -19,25 +19,29 @@ import {
 
 const durations = new TypedMap<string, string>()
 durations.set("2628000", "oneMonth")
+durations.set("2592000", "oneMonth") // TODO: remove later
 durations.set("1209600", "twoWeeks")
 durations.set("604800", "oneWeek")
 durations.set("259200", "threeDays")
 durations.set("86400", "oneDay")
 durations.set("43200", "twelveHours")
+durations.set("4320", "twelveHours") // TODO: remove later
 durations.set("21600", "sixHours")
-durations.set("10800", "threeHours")
-durations.set("5", "fiveSeconds")
+durations.set("10800", "threeHours") // TODO: remove this for production and in the graphql schema
+durations.set("5", "fiveSeconds") // TODO: remove this for production
 
 const durationsEnum = new TypedMap<string, string>()
 durationsEnum.set("2628000", "ONE_MONTH")
+durationsEnum.set("2592000", "ONE_MONTH")
 durationsEnum.set("1209600", "TWO_WEEKS")
 durationsEnum.set("604800", "ONE_WEEK")
 durationsEnum.set("259200", "THREE_DAYS")
 durationsEnum.set("86400", "ONE_DAY")
 durationsEnum.set("43200", "TWELVE_HOURS")
+durationsEnum.set("4320", "TWELVE_HOURS") // tODO: remove later
 durationsEnum.set("21600", "SIX_HOURS")
-durationsEnum.set("10800", "THREE_HOURS")
-durationsEnum.set("5", "FIVE_SECONDS")
+durationsEnum.set("10800", "THREE_HOURS") // TODO: remove this for production and in the graphql schema
+durationsEnum.set("5", "FIVE_SECONDS") // TODO: remove this for production
 
 const orderTypesEnum = new TypedMap<number, string>()
 orderTypesEnum.set(0, "ETH_TO_ERC721")

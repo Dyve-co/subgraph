@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Dyve
-    network: goerli
+    network: mainnet
     source:
-      address: "0xCB05E911204e1A4fee8962E34D134771799BF729"
+      address: "0x6ef7d9A6edb147e95eb884Bb077983da2B298777"
       abi: Dyve
-      startBlock: 8448112
+      startBlock: 16887640
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
